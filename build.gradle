@@ -1,9 +1,10 @@
 plugins {
     id 'java'
+    id 'maven-publish'
 }
 
 group = 'net.frc5183.librobot'
-version = '1.0-SNAPSHOT'
+version = '2024.1.0'
 
 repositories {
     mavenCentral()
@@ -18,10 +19,12 @@ repositories {
         url = "https://3015rangerrobotics.github.io/pathplannerlib/repo"
     }
 
+    // CTRE Phoenix
     maven {
         url = "https://maven.ctr-electronics.com/release/"
     }
 
+    // REV Robotics
     maven {
         url = "https://maven.revrobotics.com/"
     }
@@ -29,10 +32,11 @@ repositories {
 
 dependencies {
     compileOnly "edu.wpi.first.wpilibj:wpilibj-java:2024.3.2"
+    compileOnly "edu.wpi.first.wpiutil:wpiutil-java:2024.3.2"
     compileOnly "edu.wpi.first.wpilibj:commands:2024.3.2"
 
     // PathPlannerLib
-    // maven repository is broken
+    // todo: maven repository is broken
     // compileOnly "com.pathplanner.lib:PathPlannerLib-java:2024.2.6"
 
     // CTRE Phoenix (v6)
