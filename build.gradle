@@ -1,0 +1,53 @@
+plugins {
+    id 'java'
+}
+
+group = 'net.frc5183.librobot'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+
+    // WPILib
+    maven {
+        url = "https://frcmaven.wpi.edu/artifactory/release"
+    }
+
+    // PathPlannerLib
+    maven {
+        url = "https://3015rangerrobotics.github.io/pathplannerlib/repo"
+    }
+
+    maven {
+        url = "https://maven.ctr-electronics.com/release/"
+    }
+
+    maven {
+        url = "https://maven.revrobotics.com/"
+    }
+}
+
+dependencies {
+    compileOnly "edu.wpi.first.wpilibj:wpilibj-java:2024.3.2"
+    compileOnly "edu.wpi.first.wpilibj:commands:2024.3.2"
+
+    // PathPlannerLib
+    // maven repository is broken
+    // compileOnly "com.pathplanner.lib:PathPlannerLib-java:2024.2.6"
+
+    // CTRE Phoenix (v6)
+    compileOnly "com.ctre.phoenix6:wpiapi-java:24.1.0"
+    // CTRE Phoenix (v5)
+    compileOnly "com.ctre.phoenix:api-java:5.33.0"
+    compileOnly "com.ctre.phoenix:wpiapi-java:5.33.0"
+
+    // REV Robotics
+    compileOnly "com.revrobotics.frc:REVLib-java:2024.2.0"
+
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
