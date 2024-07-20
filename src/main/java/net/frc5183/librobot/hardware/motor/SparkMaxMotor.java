@@ -1,7 +1,5 @@
 package net.frc5183.librobot.hardware.motor;
 
-import com.revrobotics.EncoderType;
-import com.revrobotics.SparkMaxRelativeEncoder;
 import com.revrobotics.SparkRelativeEncoder;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
@@ -36,7 +34,9 @@ public class SparkMaxMotor extends Motor implements EncodedMotor {
     }
 
     @Override
-    public void periodic() {}
+    public void periodic() {
+        // The Spark Max does not have a periodic method.
+    }
 
     @Override
     public double get() {
@@ -44,7 +44,9 @@ public class SparkMaxMotor extends Motor implements EncodedMotor {
     }
 
     @Override
-    public void setSafety(boolean on) {}
+    public void setSafety(boolean on) {
+        // The Spark Max does not have a setSafety method.
+    }
 
     @Override
     public void setInverted(boolean inverted) {
