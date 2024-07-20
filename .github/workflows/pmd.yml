@@ -1,0 +1,28 @@
+name: PMD Validation
+
+on:
+    pull_request:
+        paths:
+            - '.github/workflows/pmd.yml'
+            - 'src/main/java/**'
+            - 'pmd.xml'
+
+jobs:
+    pmd:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Set up JDK 17
+              uses: actions/setup-java@v4
+              with:
+                  distribution: 'temurin'
+                  java-version: '17'
+
+            - name: Run PMD
+              uses: pmd/pmd-github-action@v2
+              with:
+                sourcePath: "src/main/java"
+                rulesets: "pmd.xml"
