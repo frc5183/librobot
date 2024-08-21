@@ -68,12 +68,7 @@ public class SparkMaxMotor extends Motor implements EncodedMotor {
         motor.stopMotor();
     }
 
-    @Override
-    public MotorController getRawMotor() {
-        return motor;
-    }
-
-    public CANSparkMax getTrueRawMotor() {
+    public CANSparkMax getRawMotor() {
         return motor;
     }
 
