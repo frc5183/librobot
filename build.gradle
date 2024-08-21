@@ -28,12 +28,23 @@ repositories {
     maven {
         url = "https://maven.revrobotics.com/"
     }
+
+    // Kauai Labs NavX
+    maven {
+        url = "https://dev.studica.com/maven/release/2024/"
+    }
+
+    // YAGSL
+    maven {
+        url = "https://broncbotz3481.github.io/YAGSL-Lib/yagsl/repos"
+    }
 }
 
 dependencies {
     compileOnly "edu.wpi.first.wpilibj:wpilibj-java:2024.3.2"
     compileOnly "edu.wpi.first.wpiutil:wpiutil-java:2024.3.2"
     compileOnly "edu.wpi.first.wpilibj:commands:2024.3.2"
+    compileOnly "edu.wpi.first.wpilibNewCommands:wpilibNewCommands-java:2024.3.2"
 
     // PathPlannerLib
     // todo: maven repository is broken
@@ -47,6 +58,12 @@ dependencies {
 
     // REV Robotics
     compileOnly "com.revrobotics.frc:REVLib-java:2024.2.0"
+
+    // NavX
+    compileOnly "com.kauailabs.navx.frc:navx-frc-java:2024.1.0"
+
+    // YAGSL
+    compileOnly "swervelib:YAGSL-java:2024.5.0.0"
 
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
