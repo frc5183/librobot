@@ -30,3 +30,4 @@ jobs:
                 
             - name: PMD failed
               if: ${{ !success() || steps.pmd.outputs.violations > 0 }}
+              run: exit 1
