@@ -22,7 +22,12 @@ jobs:
                   java-version: '17'
 
             - name: Run PMD
+              id: pmd
               uses: pmd/pmd-github-action@v2
               with:
                 sourcePath: "src/main/java"
                 rulesets: "pmd.xml"
+                
+            - name: PMD failed
+              if: ${{ !success() || steps.pmd.outputs.violations > 0 }}
+              run: exit 1
