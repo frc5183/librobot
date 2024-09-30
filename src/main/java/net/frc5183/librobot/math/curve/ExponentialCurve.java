@@ -19,7 +19,7 @@ public class ExponentialCurve extends Curve {
     }
 
     @Override
-    public Double curve(Double x) {
+    public double curve(double x) {
         if (x == 0) return 0d;
 
         // y = (x/|x|) * ((1 + exaggeration)^|x| - 1) / exaggeration

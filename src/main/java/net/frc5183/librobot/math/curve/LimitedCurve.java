@@ -12,12 +12,12 @@ public class LimitedCurve extends Curve {
     /**
      * The minimum value of the curve.
      */
-    private Double min;
+    private double min;
 
     /**
      * The maximum value of the curve.
      */
-    private Double max;
+    private double max;
 
     /**
      * Creates a new {@link LimitedCurve} with the given curve, minimum, and maximum values.
@@ -25,15 +25,15 @@ public class LimitedCurve extends Curve {
      * @param min The minimum value of the curve.
      * @param max The maximum value of the curve.
      */
-    public LimitedCurve(Curve curve, Double min, Double max) {
+    public LimitedCurve(Curve curve, double min, double max) {
         this.curve = curve;
         this.min = min;
         this.max = max;
     }
 
     @Override
-    public Double curve(Double x) {
-        Double y = curve.curve(x);
+    public double curve(double x) {
+        double y = curve.curve(x);
         return Math.min(Math.max(y, min), max);
     }
 
@@ -57,7 +57,7 @@ public class LimitedCurve extends Curve {
      * Returns the minimum value of the curve.
      * @return The minimum value of the curve.
      */
-    public Double getMin() {
+    public double getMin() {
         return min;
     }
 
@@ -65,7 +65,7 @@ public class LimitedCurve extends Curve {
      * Sets the minimum value of the curve.
      * @param min The new minimum value of the curve.
      */
-    public void setMin(Double min) {
+    public void setMin(double min) {
         this.min = min;
     }
 
@@ -73,7 +73,7 @@ public class LimitedCurve extends Curve {
      * Returns the maximum value of the curve.
      * @return The maximum value of the curve.
      */
-    public Double getMax() {
+    public double getMax() {
         return max;
     }
 
@@ -81,7 +81,7 @@ public class LimitedCurve extends Curve {
      * Sets the maximum value of the curve.
      * @param max The new maximum value of the curve.
      */
-    public void setMax(Double max) {
+    public void setMax(double max) {
         this.max = max;
     }
 }

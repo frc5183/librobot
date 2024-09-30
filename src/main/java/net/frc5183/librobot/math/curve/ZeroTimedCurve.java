@@ -15,18 +15,18 @@ public class ZeroTimedCurve extends TimedCurve {
      * @param delayEnabled The delay in seconds before the curve is enabled.
      * @param delayDisabled The delay in seconds before the curve is disabled.
      */
-    public ZeroTimedCurve(Curve curve, Double delayEnabled, Double delayDisabled) {
+    public ZeroTimedCurve(Curve curve, double delayEnabled, double delayDisabled) {
         super(delayEnabled, delayDisabled);
         this.curve = curve;
     }
 
     @Override
-    protected Double enabled(Double x) {
+    protected double enabled(double x) {
         return curve.curve(x);
     }
 
     @Override
-    protected Double disabled(Double x) {
+    protected double disabled(double x) {
         return 0.0;
     }
 

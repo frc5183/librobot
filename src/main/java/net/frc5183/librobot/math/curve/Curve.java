@@ -9,5 +9,5 @@ public abstract class Curve {
      * @param x The x value to evaluate the curve at.
      * @return The value of the curve at the given x value.
      */
-    public abstract Double curve(Double x);
+    public abstract double curve(double x);
 }

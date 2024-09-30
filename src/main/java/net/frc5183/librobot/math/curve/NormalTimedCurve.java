@@ -15,18 +15,18 @@ public class NormalTimedCurve extends TimedCurve {
      * @param delayEnabled The delay in seconds before the curve is enabled.
      * @param delayDisabled The delay in seconds before the curve is disabled.
      */
-    public NormalTimedCurve(Curve curve, Double delayEnabled, Double delayDisabled) {
+    public NormalTimedCurve(Curve curve, double delayEnabled, double delayDisabled) {
         super(delayEnabled, delayDisabled);
         this.curve = curve;
     }
 
     @Override
-    protected Double enabled(Double x) {
+    protected double enabled(double x) {
         return curve(x);
     }
 
     @Override
-    protected Double disabled(Double x) {
+    protected double disabled(double x) {
         return x;
     }
 

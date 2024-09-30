@@ -50,7 +50,7 @@ public class PiecewiseCurve extends Curve {
     }
 
     @Override
-    public Double curve(Double x) {
+    public double curve(double x) {
         for (Map.Entry<Function<Double, Boolean>, Curve> entry : curves.entrySet()) {
             if (entry.getKey().apply(x)) {
                 return entry.getValue().curve(x);

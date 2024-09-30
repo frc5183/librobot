@@ -20,21 +20,21 @@ public class DoubleTimedCurve extends TimedCurve {
      * @param disabledCurve The curve to use when this curve is disabled.
      * @param delayEnabled The delay in seconds before the curve is enabled.
      * @param delayDisabled The delay in seconds before the curve is disabled.
-     * @see TimedCurve#TimedCurve(Double, Double)
+     * @see TimedCurve#TimedCurve(double, double)
      */
-    public DoubleTimedCurve(Curve enabledCurve, Curve disabledCurve, Double delayEnabled, Double delayDisabled) {
+    public DoubleTimedCurve(Curve enabledCurve, Curve disabledCurve, double delayEnabled, double delayDisabled) {
         super(delayEnabled, delayDisabled);
         this.enabledCurve = enabledCurve;
         this.disabledCurve = disabledCurve;
     }
 
     @Override
-    protected Double enabled(Double x) {
+    protected double enabled(double x) {
         return enabledCurve.curve(x);
     }
 
     @Override
-    protected Double disabled(Double x) {
+    protected double disabled(double x) {
         return disabledCurve.curve(x);
     }
 

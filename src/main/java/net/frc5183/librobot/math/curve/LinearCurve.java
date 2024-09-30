@@ -25,7 +25,7 @@ public class LinearCurve extends Curve {
     }
 
     @Override
-    public Double curve(Double x) {
+    public double curve(double x) {
         // y = mx + b
         return slope * x + yIntercept;
     }

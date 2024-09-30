@@ -19,25 +19,25 @@ public abstract class TimedCurve extends Curve {
     /**
      * The delay in seconds before the curve is enabled.
      */
-    private Double delayEnabled;
+    private double delayEnabled;
 
     /**
      * The delay in seconds before the curve is disabled.
      */
-    private Double delayDisabled;
+    private double delayDisabled;
 
     /**
      * Creates a new {@link TimedCurve} with the given delays.
      * @param delayEnabled The delay in seconds before the curve is enabled.
      * @param delayDisabled The delay in seconds before the curve is disabled.
      */
-    public TimedCurve(Double delayEnabled, Double delayDisabled) {
+    public TimedCurve(double delayEnabled, double delayDisabled) {
         this.delayEnabled = delayEnabled;
         this.delayDisabled = delayDisabled;
     }
 
     @Override
-    public Double curve(Double x) {
+    public double curve(double x) {
         if (disabled && timer.hasElapsed(delayDisabled)) {
             disabled = false;
             timer.reset();
@@ -54,20 +54,20 @@ public abstract class TimedCurve extends Curve {
      * @param x The x value to evaluate the curve at.
      * @return The value of the curve when it is enabled.
      */
-    protected abstract Double enabled(Double x);
+    protected abstract double enabled(double x);
 
     /**
      * Returns the value of the curve when it is disabled.
      * @param x The x value to evaluate the curve at.
      * @return The value of the curve when it is disabled.
      */
-    protected abstract Double disabled(Double x);
+    protected abstract double disabled(double x);
 
     /**
      * Returns whether the curve is currently disabled.
      * @return Whether the curve is currently disabled.
      */
-    public Double getDelayEnabled() {
+    public double getDelayEnabled() {
         return delayEnabled;
     }
 
@@ -75,7 +75,7 @@ public abstract class TimedCurve extends Curve {
      * Sets whether the curve is currently disabled.
      * @param delayEnabled Whether the curve is currently disabled.
      */
-    public void setDelayEnabled(Double delayEnabled) {
+    public void setDelayEnabled(double delayEnabled) {
         this.delayEnabled = delayEnabled;
     }
 
@@ -83,7 +83,7 @@ public abstract class TimedCurve extends Curve {
      * Returns the delay in seconds before the curve is disabled.
      * @return The delay in seconds before the curve is disabled.
      */
-    public Double getDelayDisabled() {
+    public double getDelayDisabled() {
         return delayDisabled;
     }
 
@@ -91,7 +91,7 @@ public abstract class TimedCurve extends Curve {
      * Sets the delay in seconds before the curve is disabled.
      * @param delayDisabled The delay in seconds before the curve is disabled.
      */
-    public void setDelayDisabled(Double delayDisabled) {
+    public void setDelayDisabled(double delayDisabled) {
         this.delayDisabled = delayDisabled;
     }
 }
