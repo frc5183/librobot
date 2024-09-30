@@ -15,6 +15,10 @@ public class ExponentialCurve extends Curve {
      * @param exaggeration The exaggeration of the curve.
      */
     public ExponentialCurve(double exaggeration) {
+        if (exaggeration <= 0) {
+            throw new IllegalArgumentException("Exaggeration must be greater than 0.");
+        }
+
         this.exaggeration = exaggeration;
     }
 
