@@ -44,6 +44,7 @@ dependencies {
     compileOnly "edu.wpi.first.wpilibj:wpilibj-java:2024.3.2"
     compileOnly "edu.wpi.first.wpiutil:wpiutil-java:2024.3.2"
     compileOnly "edu.wpi.first.wpilibj:commands:2024.3.2"
+    compileOnly "edu.wpi.first.wpimath:wpimath-java:2024.3.2"
     compileOnly "edu.wpi.first.wpilibNewCommands:wpilibNewCommands-java:2024.3.2"
 
     // PathPlannerLib
