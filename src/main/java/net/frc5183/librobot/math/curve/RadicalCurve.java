@@ -24,8 +24,11 @@ public class RadicalCurve extends Curve {
      * @param a The "A" variable in the curve equation.
      * @param b The "B" variable in the curve equation.
      * @param c The "C" variable in the curve equation.
+     * @throws IllegalArgumentException If A is 0.
      */
     public RadicalCurve(double a, double b, double c) {
+        if (a == 0) throw new IllegalArgumentException("A cannot be 0.");
+
         this.a = a;
         this.b = b;
         this.c = c;
@@ -48,8 +51,11 @@ public class RadicalCurve extends Curve {
     /**
      * Sets the "A" variable in the curve equation.
      * @param a The new "A" variable in the curve equation.
+     * @throws IllegalArgumentException If A is 0.
      */
     public void setA(double a) {
+        if (a == 0) throw new IllegalArgumentException("A cannot be 0.");
+
         this.a = a;
     }
 
