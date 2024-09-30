@@ -1,5 +1,7 @@
 package net.frc5183.librobot.math.curve;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * A {@link TimedCurve} that toggles between two curves.
  */
@@ -7,11 +9,13 @@ public class DoubleTimedCurve extends TimedCurve {
     /**
      * The curve to use when the curve is enabled.
      */
+    @NotNull
     private Curve enabledCurve;
 
     /**
      * The curve to use when the curve is disabled.
      */
+    @NotNull
     private Curve disabledCurve;
 
     /**
@@ -22,7 +26,7 @@ public class DoubleTimedCurve extends TimedCurve {
      * @param delayDisabled The delay in seconds before the curve is disabled.
      * @see TimedCurve#TimedCurve(double, double)
      */
-    public DoubleTimedCurve(Curve enabledCurve, Curve disabledCurve, double delayEnabled, double delayDisabled) {
+    public DoubleTimedCurve(@NotNull Curve enabledCurve, @NotNull Curve disabledCurve, double delayEnabled, double delayDisabled) {
         super(delayEnabled, delayDisabled);
         this.enabledCurve = enabledCurve;
         this.disabledCurve = disabledCurve;
@@ -42,7 +46,7 @@ public class DoubleTimedCurve extends TimedCurve {
      * Returns the curve to use when this curve is enabled.
      * @return The curve to use when this curve is enabled.
      */
-    public Curve getEnabledCurve() {
+    public @NotNull Curve getEnabledCurve() {
         return enabledCurve;
     }
 
@@ -50,7 +54,7 @@ public class DoubleTimedCurve extends TimedCurve {
      * Sets the curve to use when this curve is enabled.
      * @param enabledCurve The new curve to use when the curve is enabled.
      */
-    public void setEnabledCurve(Curve enabledCurve) {
+    public void setEnabledCurve(@NotNull Curve enabledCurve) {
         this.enabledCurve = enabledCurve;
     }
 
@@ -58,7 +62,7 @@ public class DoubleTimedCurve extends TimedCurve {
      * Returns the curve to use when this curve is disabled.
      * @return The curve to use when this curve is disabled.
      */
-    public Curve getDisabledCurve() {
+    public @NotNull Curve getDisabledCurve() {
         return disabledCurve;
     }
 
@@ -66,7 +70,7 @@ public class DoubleTimedCurve extends TimedCurve {
      * Sets the curve to use when this curve is disabled.
      * @param disabledCurve The new curve to use when the curve is disabled.
      */
-    public void setDisabledCurve(Curve disabledCurve) {
+    public void setDisabledCurve(@NotNull Curve disabledCurve) {
         this.disabledCurve = disabledCurve;
     }
 }

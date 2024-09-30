@@ -1,5 +1,7 @@
 package net.frc5183.librobot.math.curve;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * A {@link TimedCurve} that toggles between 0 (when disabled) and curve(x) (when enabled);
  */
@@ -7,6 +9,7 @@ public class ZeroTimedCurve extends TimedCurve {
     /**
      * The curve to use when this curve is enabled.
      */
+    @NotNull
     private Curve curve;
 
     /**
@@ -15,7 +18,7 @@ public class ZeroTimedCurve extends TimedCurve {
      * @param delayEnabled The delay in seconds before the curve is enabled.
      * @param delayDisabled The delay in seconds before the curve is disabled.
      */
-    public ZeroTimedCurve(Curve curve, double delayEnabled, double delayDisabled) {
+    public ZeroTimedCurve(@NotNull Curve curve, double delayEnabled, double delayDisabled) {
         super(delayEnabled, delayDisabled);
         this.curve = curve;
     }
@@ -34,6 +37,7 @@ public class ZeroTimedCurve extends TimedCurve {
      * Returns the curve to use when this curve is enabled.
      * @return The curve to use when this curve is enabled.
      */
+    @NotNull
     public Curve getCurve() {
         return curve;
     }
@@ -42,7 +46,7 @@ public class ZeroTimedCurve extends TimedCurve {
      * Sets the curve to use when this curve is enabled.
      * @param curve The new curve to use when the curve is enabled.
      */
-    public void setCurve(Curve curve) {
+    public void setCurve(@NotNull Curve curve) {
         this.curve = curve;
     }
 }

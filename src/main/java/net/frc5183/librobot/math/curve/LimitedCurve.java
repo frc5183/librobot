@@ -1,5 +1,7 @@
 package net.frc5183.librobot.math.curve;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * A {@link Curve} which limits the output of another curve to a certain range.
  */
@@ -7,6 +9,7 @@ public class LimitedCurve extends Curve {
     /**
      * The curve to limit.
      */
+    @NotNull
     private Curve curve;
 
     /**
@@ -25,7 +28,7 @@ public class LimitedCurve extends Curve {
      * @param min The minimum value of the curve.
      * @param max The maximum value of the curve.
      */
-    public LimitedCurve(Curve curve, double min, double max) {
+    public LimitedCurve(@NotNull Curve curve, double min, double max) {
         this.curve = curve;
         this.min = min;
         this.max = max;
@@ -41,7 +44,7 @@ public class LimitedCurve extends Curve {
      * Returns the curve to limit.
      * @return The curve to limit.
      */
-    public Curve getCurve() {
+    public @NotNull Curve getCurve() {
         return curve;
     }
 
@@ -49,7 +52,7 @@ public class LimitedCurve extends Curve {
      * Sets the curve to limit.
      * @param curve The new curve to limit.
      */
-    public void setCurve(Curve curve) {
+    public void setCurve(@NotNull Curve curve) {
         this.curve = curve;
     }
 
