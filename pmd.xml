@@ -9,5 +9,7 @@
         frc5183/librobot ruleset.
     </description>
 
-    <rule ref="rulesets/java/quickstart.xml"/>
+    <rule ref="rulesets/java/quickstart.xml">
+        <exclude name="ControlStatementBraces"/>
+    </rule>
 </ruleset>
