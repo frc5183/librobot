@@ -27,8 +27,11 @@ public class LimitedCurve extends Curve {
      * @param curve The curve to limit.
      * @param min The minimum value of the curve.
      * @param max The maximum value of the curve.
+     * @throws IllegalArgumentException If the minimum value is greater than the maximum value.
      */
     public LimitedCurve(@NotNull Curve curve, double min, double max) {
+        if (min > max) throw new IllegalArgumentException("Minimum value cannot be greater than maximum value.");
+
         this.curve = curve;
         this.min = min;
         this.max = max;
@@ -67,8 +70,10 @@ public class LimitedCurve extends Curve {
     /**
      * Sets the minimum value of the curve.
      * @param min The new minimum value of the curve.
+     * @throws IllegalArgumentException If the minimum value is greater than the maximum value.
      */
     public void setMin(double min) {
+        if (min > max) throw new IllegalArgumentException("Minimum value cannot be greater than maximum value.");
         this.min = min;
     }
 
@@ -83,8 +88,10 @@ public class LimitedCurve extends Curve {
     /**
      * Sets the maximum value of the curve.
      * @param max The new maximum value of the curve.
+     * @throws IllegalArgumentException If the minimum value is greater than the maximum value.
      */
     public void setMax(double max) {
+        if (min > max) throw new IllegalArgumentException("Minimum value cannot be greater than maximum value.");
         this.max = max;
     }
 }
