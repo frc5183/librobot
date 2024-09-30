@@ -64,16 +64,16 @@ public abstract class TimedCurve extends Curve {
     protected abstract double disabled(double x);
 
     /**
-     * Returns whether the curve is currently disabled.
-     * @return Whether the curve is currently disabled.
+     * Returns the delay in seconds before the curve is enabled.
+     * @return The delay in seconds before the curve is enabled.
      */
     public double getDelayEnabled() {
         return delayEnabled;
     }
 
     /**
-     * Sets whether the curve is currently disabled.
-     * @param delayEnabled Whether the curve is currently disabled.
+     * Sets the delay in seconds before the curve is enabled.
+     * @param delayEnabled The delay in seconds before the curve is enabled.
      */
     public void setDelayEnabled(double delayEnabled) {
         this.delayEnabled = delayEnabled;
