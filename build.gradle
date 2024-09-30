@@ -41,6 +41,9 @@ repositories {
 }
 
 dependencies {
+    // Jetbrains Annotations
+    compileOnly "org.jetbrains:annotations:25.0.0"
+
     compileOnly "edu.wpi.first.wpilibj:wpilibj-java:2024.3.2"
     compileOnly "edu.wpi.first.wpiutil:wpiutil-java:2024.3.2"
     compileOnly "edu.wpi.first.wpilibj:commands:2024.3.2"
