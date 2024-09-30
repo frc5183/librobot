@@ -23,7 +23,7 @@ public class ExponentialCurve extends Curve {
         if (x == 0) return 0d;
 
         // y = (x/|x|) * ((1 + exaggeration)^|x| - 1) / exaggeration
-        return (x / Math.abs(x)) * ((Math.pow(1 + exaggeration, Math.abs(x))) - 1) / exaggeration;
+        return (x / Math.abs(x)) * ((Math.pow(1 + exaggeration, Math.abs(x))) - 1) / exaggeration; // NOPMD - extra parentheses make the equation easier to read
     }
 
     /**
