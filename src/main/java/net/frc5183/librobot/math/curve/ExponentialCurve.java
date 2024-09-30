@@ -13,6 +13,7 @@ public class ExponentialCurve extends Curve {
     /**
      * Creates a new {@link ExponentialCurve} with the given exaggeration.
      * @param exaggeration The exaggeration of the curve.
+     * @throws IllegalArgumentException If the exaggeration is less than or equal to 0.
      */
     public ExponentialCurve(double exaggeration) {
         if (exaggeration <= 0) {
@@ -41,6 +42,7 @@ public class ExponentialCurve extends Curve {
     /**
      * Sets the exaggeration of the curve.
      * @param exaggeration The new exaggeration of the curve.
+     * @throws IllegalArgumentException If the exaggeration is less than or equal to 0.
      */
     public void setExaggeration(double exaggeration) {
         if (exaggeration <= 0) {
