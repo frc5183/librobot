@@ -112,21 +112,21 @@ public class ADIS16448IMU extends IMU {
         return switch (axis) {
             case YAW ->
                     switch (this.yaw) {
-                        case IMUAxis.X -> imu.getGyroAngleX();
-                        case IMUAxis.Y -> imu.getGyroAngleY();
-                        case IMUAxis.Z -> imu.getGyroAngleZ();
+                        case X -> imu.getGyroAngleX();
+                        case Y -> imu.getGyroAngleY();
+                        case Z -> imu.getGyroAngleZ();
                     };
             case PITCH ->
                     switch (this.pitch) {
-                        case IMUAxis.X -> imu.getGyroAngleX();
-                        case IMUAxis.Y -> imu.getGyroAngleY();
-                        case IMUAxis.Z -> imu.getGyroAngleZ();
+                        case X -> imu.getGyroAngleX();
+                        case Y -> imu.getGyroAngleY();
+                        case Z -> imu.getGyroAngleZ();
                     };
             case ROLL ->
                     switch (this.roll) {
-                        case IMUAxis.X -> imu.getGyroAngleX();
-                        case IMUAxis.Y -> imu.getGyroAngleY();
-                        case IMUAxis.Z -> imu.getGyroAngleZ();
+                        case X -> imu.getGyroAngleX();
+                        case Y -> imu.getGyroAngleY();
+                        case Z -> imu.getGyroAngleZ();
                     };
         };
     }
