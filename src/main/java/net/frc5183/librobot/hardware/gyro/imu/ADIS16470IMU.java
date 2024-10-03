@@ -139,9 +139,9 @@ public class ADIS16470IMU extends IMU {
      */
     public static IMUAxis toIMUAxis(ADIS16470_IMU.IMUAxis axis) {
         return switch (axis) {
-            case ADIS16470_IMU.IMUAxis.kX -> IMUAxis.X;
-            case ADIS16470_IMU.IMUAxis.kY -> IMUAxis.Y;
-            case ADIS16470_IMU.IMUAxis.kZ -> IMUAxis.Z;
+            case kX -> IMUAxis.X;
+            case kY -> IMUAxis.Y;
+            case kZ -> IMUAxis.Z;
             default -> throw new IllegalArgumentException("IMU axis must be one of  " + axis);
         };
     }
