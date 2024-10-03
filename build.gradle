@@ -4,7 +4,9 @@ plugins {
 }
 
 group = 'net.frc5183.librobot'
-version = '2024.1.0'
+
+// This is used for Github Actions for nightly builds, otherwise, releases will use the version after "?:"
+def version = System.getenv("LIBROBOT_VERSION") ?: "2024.1.0"
 
 repositories {
     mavenCentral()
