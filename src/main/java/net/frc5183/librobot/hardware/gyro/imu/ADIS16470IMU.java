@@ -37,11 +37,7 @@ public class ADIS16470IMU extends IMU {
      * @see ADIS16470_IMU#ADIS16470_IMU()
      */
     public ADIS16470IMU() {
-        imu = new ADIS16470_IMU();
-
-        yaw = imu.getYawAxis();
-        pitch = imu.getPitchAxis();
-        roll = imu.getRollAxis();
+        this(new ADIS16470_IMU());
     }
 
     /**
@@ -50,6 +46,10 @@ public class ADIS16470IMU extends IMU {
      */
     public ADIS16470IMU(@NotNull ADIS16470_IMU imu) {
         this.imu = imu;
+
+        yaw = toIMUAxis(imu.getYawAxis());
+        pitch = toIMUAxis(imu.getPitchAxis());
+        roll = toIMUAxis(imu.getRollAxis());
     }
 
     /**
@@ -60,7 +60,7 @@ public class ADIS16470IMU extends IMU {
      * @param roll the ROLL axis.
      */
     public ADIS16470IMU(IMUAxis yaw, IMUAxis pitch, IMUAxis roll) {
-        imu = new ADIS16470_IMU(fromIMUAxis(yaw), fromIMUAxis(pitch), fromIMUAxis(roll));
+        this(yaw, pitch, roll, SPI.Port.kMXP);
     }
 
     /**
@@ -72,7 +72,7 @@ public class ADIS16470IMU extends IMU {
      * @param port the SPI port.
      */
     public ADIS16470IMU(IMUAxis yaw, IMUAxis pitch, IMUAxis roll, SPI.Port port) {
-        imu = new ADIS16470_IMU(fromIMUAxis(yaw), fromIMUAxis(pitch), fromIMUAxis(roll), port, ADIS16470_IMU.CalibrationTime._4s);
+        this(yaw, pitch, roll, port, ADIS16470_IMU.CalibrationTime._4s);
     }
 
     /**
@@ -85,14 +85,18 @@ public class ADIS16470IMU extends IMU {
      */
     public ADIS16470IMU(IMUAxis yaw, IMUAxis pitch, IMUAxis roll, SPI.Port port, ADIS16470_IMU.CalibrationTime calibrationTime) {
         imu = new ADIS16470_IMU(fromIMUAxis(yaw), fromIMUAxis(pitch), fromIMUAxis(roll), port, calibrationTime);
+
+        this.yaw = yaw;
+        this.pitch = pitch;
+        this.roll = roll;
     }
 
     @Override
-    public @NotNull Rotation3d getRawRotation3dDegrees() {
+    public @NotNull Rotation3d getRawRotation3d() {
         return new Rotation3d(
-                imu.getAngle(fromIMUAxis(IMUAxis.X)),
-                imu.getAngle(fromIMUAxis(IMUAxis.Y)),
-                imu.getAngle(fromIMUAxis(IMUAxis.Z))
+                Math.toRadians(imu.getAngle(fromIMUAxis(IMUAxis.X))),
+                Math.toRadians(imu.getAngle(fromIMUAxis(IMUAxis.Y))),
+                Math.toRadians(imu.getAngle(fromIMUAxis(IMUAxis.Z)))
         );
     }
 

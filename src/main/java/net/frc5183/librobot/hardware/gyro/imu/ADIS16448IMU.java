@@ -19,17 +19,19 @@ public class ADIS16448IMU extends IMU {
     private final ADIS16448_IMU imu;
 
     /**
-     * The YAW axis.
+     * The yaw axis.
      */
+    @NotNull
     private final IMUAxis yaw;
 
     /**
-     * The PITCH axis.
+     * The pitch axis.
      */
+    @NotNull
     private final IMUAxis pitch;
 
     /**
-     * The ROLL axis.
+     * The roll axis.
      */
     private final IMUAxis roll;
 
@@ -38,10 +40,7 @@ public class ADIS16448IMU extends IMU {
      * @see ADIS16448_IMU#ADIS16448_IMU()
      */
     public ADIS16448IMU() {
-        yaw = IMUAxis.Z;
-        pitch = IMUAxis.X;
-        roll = IMUAxis.Y;
-        imu = new ADIS16448_IMU();
+        this(new ADIS16448_IMU());
     }
 
     /**
@@ -71,21 +70,8 @@ public class ADIS16448IMU extends IMU {
      * Uses default RIO's Onboard MXP port and 512ms calibration time.
      * @param yaw the YAW axis.
      */
-    public ADIS16448IMU(IMUAxis yaw) {
-        this.yaw = yaw;
-
-        if (yaw == IMUAxis.X) {
-            pitch = IMUAxis.Y;
-            roll = IMUAxis.Z;
-        } else if (yaw == IMUAxis.Y) {
-            pitch = IMUAxis.X;
-            roll = IMUAxis.Z;
-        } else {
-            pitch = IMUAxis.X;
-            roll = IMUAxis.Y;
-        }
-
-        imu = new ADIS16448_IMU(fromIMUAxis(yaw), SPI.Port.kMXP, ADIS16448_IMU.CalibrationTime._512ms);
+    public ADIS16448IMU(@NotNull IMUAxis yaw) {
+        this(yaw, SPI.Port.kMXP);
     }
 
     /**
@@ -94,21 +80,8 @@ public class ADIS16448IMU extends IMU {
      * @param yaw the YAW axis.
      * @param port the SPI port.
      */
-    public ADIS16448IMU(IMUAxis yaw, SPI.Port port) {
-        this.yaw = yaw;
-
-        if (yaw) {
-            pitch = IMUAxis.Y;
-            roll = IMUAxis.Z;
-        } else if (yaw == IMUAxis.Y) {
-            pitch = IMUAxis.X;
-            roll = IMUAxis.Z;
-        } else {
-            pitch = IMUAxis.X;
-            roll = IMUAxis.Y;
-        }
-
-        imu = new ADIS16448_IMU(fromIMUAxis(yaw), port, ADIS16448_IMU.CalibrationTime._512ms);
+    public ADIS16448IMU(@NotNull IMUAxis yaw, @NotNull SPI.Port port) {
+        this(yaw, port, ADIS16448_IMU.CalibrationTime._512ms);
     }
 
     /**
@@ -117,10 +90,11 @@ public class ADIS16448IMU extends IMU {
      * @param port the SPI port.
      * @param calibrationTime the calibration time.
      */
-    public ADIS16448IMU(IMUAxis yaw, SPI.Port port, ADIS16448_IMU.CalibrationTime calibrationTime) {
+    public ADIS16448IMU(@NotNull IMUAxis yaw, @NotNull SPI.Port port, @NotNull ADIS16448_IMU.CalibrationTime calibrationTime) {
         this.yaw = yaw;
 
-        if (yaw) {
+        //todo: confirm this is correct i had copilot do it
+        if (yaw == IMUAxis.X) {
             pitch = IMUAxis.Y;
             roll = IMUAxis.Z;
         } else if (yaw == IMUAxis.Y) {
@@ -135,8 +109,12 @@ public class ADIS16448IMU extends IMU {
     }
 
     @Override
-    public @NotNull Rotation3d getRawRotation3dDegrees() {
-        return new Rotation3d(imu.getGyroAngleX(), imu.getGyroAngleY(), imu.getGyroAngleZ());
+    public @NotNull Rotation3d getRawRotation3d() {
+        return new Rotation3d(
+                Math.toRadians(imu.getGyroAngleX()),
+                Math.toRadians(imu.getGyroAngleY()),
+                Math.toRadians(imu.getGyroAngleZ())
+        );
     }
 
     @Override
