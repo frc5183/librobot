@@ -27,7 +27,7 @@ publishing {
         maven(MavenPublication) {
             groupId = group as Publication
             artifactId = 'librobot' as Publication
-            version = project.version.toString() as Publication
+            version = version.toString() as Publication
 
             from components.java
         }
