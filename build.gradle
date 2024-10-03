@@ -19,6 +19,16 @@ publishing {
             }
         }
     }
+    
+    publications {
+        maven(MavenPublication) {
+            groupId = group
+            artifactId = 'librobot'
+            version = version
+
+            from components.java
+        }
+    }
 }
 
 repositories {
