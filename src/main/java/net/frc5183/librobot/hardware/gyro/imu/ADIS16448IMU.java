@@ -1,6 +1,7 @@
 package net.frc5183.librobot.hardware.gyro.imu;
 
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.SPI;
 import org.jetbrains.annotations.NotNull;
@@ -38,6 +39,8 @@ public class ADIS16448IMU extends IMU {
      */
     public ADIS16448IMU() {
         yaw = IMUAxis.Z;
+        pitch = IMUAxis.X;
+        roll = IMUAxis.Y;
         imu = new ADIS16448_IMU();
     }
 
@@ -46,6 +49,20 @@ public class ADIS16448IMU extends IMU {
      * @param imu the ADIS16448 IMU to use.
      */
     public ADIS16448IMU(@NotNull ADIS16448_IMU imu) {
+        yaw = toIMUAxis(imu.getYawAxis());
+
+        //todo: confirm this is correct i had copilot do it
+        if (yaw == IMUAxis.X) {
+            pitch = IMUAxis.Y;
+            roll = IMUAxis.Z;
+        } else if (yaw == IMUAxis.Y) {
+            pitch = IMUAxis.X;
+            roll = IMUAxis.Z;
+        } else {
+            pitch = IMUAxis.X;
+            roll = IMUAxis.Y;
+        }
+
         this.imu = imu;
     }
 
@@ -56,6 +73,18 @@ public class ADIS16448IMU extends IMU {
      */
     public ADIS16448IMU(IMUAxis yaw) {
         this.yaw = yaw;
+
+        if (yaw == IMUAxis.X) {
+            pitch = IMUAxis.Y;
+            roll = IMUAxis.Z;
+        } else if (yaw == IMUAxis.Y) {
+            pitch = IMUAxis.X;
+            roll = IMUAxis.Z;
+        } else {
+            pitch = IMUAxis.X;
+            roll = IMUAxis.Y;
+        }
+
         imu = new ADIS16448_IMU(fromIMUAxis(yaw), SPI.Port.kMXP, ADIS16448_IMU.CalibrationTime._512ms);
     }
 
@@ -67,6 +96,18 @@ public class ADIS16448IMU extends IMU {
      */
     public ADIS16448IMU(IMUAxis yaw, SPI.Port port) {
         this.yaw = yaw;
+
+        if (yaw) {
+            pitch = IMUAxis.Y;
+            roll = IMUAxis.Z;
+        } else if (yaw == IMUAxis.Y) {
+            pitch = IMUAxis.X;
+            roll = IMUAxis.Z;
+        } else {
+            pitch = IMUAxis.X;
+            roll = IMUAxis.Y;
+        }
+
         imu = new ADIS16448_IMU(fromIMUAxis(yaw), port, ADIS16448_IMU.CalibrationTime._512ms);
     }
 
@@ -78,6 +119,18 @@ public class ADIS16448IMU extends IMU {
      */
     public ADIS16448IMU(IMUAxis yaw, SPI.Port port, ADIS16448_IMU.CalibrationTime calibrationTime) {
         this.yaw = yaw;
+
+        if (yaw) {
+            pitch = IMUAxis.Y;
+            roll = IMUAxis.Z;
+        } else if (yaw == IMUAxis.Y) {
+            pitch = IMUAxis.X;
+            roll = IMUAxis.Z;
+        } else {
+            pitch = IMUAxis.X;
+            roll = IMUAxis.Y;
+        }
+
         imu = new ADIS16448_IMU(fromIMUAxis(yaw), port, calibrationTime);
     }
 
@@ -87,8 +140,8 @@ public class ADIS16448IMU extends IMU {
     }
 
     @Override
-    public @NotNull Rotation3d getAccelerationMetersPerSecondSquared() {
-        return new Rotation3d(imu.getAccelX(), imu.getAccelY(), imu.getAccelZ());
+    public @NotNull Translation3d getAccelerationMetersPerSecondSquared() {
+        return new Translation3d(imu.getAccelX(), imu.getAccelY(), imu.getAccelZ());
     }
 
     @Override
@@ -108,8 +161,8 @@ public class ADIS16448IMU extends IMU {
 
     /**
      * Returns a new {@link ADIS16448_IMU.IMUAxis} from an {@link IMUAxis}.
-     * @param axis the {@link IMUAxis} to convert
-     * @return the converted {@link ADIS16448_IMU.IMUAxis}
+     * @param axis the {@link IMUAxis} to convert.
+     * @return the converted {@link ADIS16448_IMU.IMUAxis}.
      */
     @NotNull
     public static ADIS16448_IMU.IMUAxis fromIMUAxis(@NotNull IMUAxis axis) {
@@ -117,6 +170,21 @@ public class ADIS16448IMU extends IMU {
             case X -> ADIS16448_IMU.IMUAxis.kX;
             case Y -> ADIS16448_IMU.IMUAxis.kY;
             case Z -> ADIS16448_IMU.IMUAxis.kZ;
+        };
+    }
+
+
+    /**
+     * Returns a new {@link IMUAxis} from an {@link ADIS16448_IMU.IMUAxis}.
+     * @param axis the {@link ADIS16448_IMU.IMUAxis} to convert.
+     * @return the converted {@link IMUAxis}.
+     */
+    @NotNull
+    public static IMUAxis toIMUAxis(@NotNull ADIS16448_IMU.IMUAxis axis) {
+        return switch (axis) {
+            case kX -> IMUAxis.X;
+            case kY -> IMUAxis.Y;
+            case kZ -> IMUAxis.Z;
         };
     }
 }

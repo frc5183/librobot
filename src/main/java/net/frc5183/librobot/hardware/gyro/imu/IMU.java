@@ -1,6 +1,7 @@
 package net.frc5183.librobot.hardware.gyro.imu;
 
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
 
 /**
  * Represents an IMU (Inertial Measurement Unit).
@@ -27,9 +28,9 @@ public abstract class IMU {
 
     /**
      * Gets the acceleration from the IMU in meters per second squared.
-     * @return {@link Rotation3d} of the acceleration from the IMU in meters per second squared.
+     * @return {@link Translation3d} of the acceleration from the IMU in meters per second squared.
      */
-    public abstract Rotation3d getAccelerationMetersPerSecondSquared();
+    public abstract Translation3d getAccelerationMetersPerSecondSquared();
 
     /**
      * Sets the offset of the gyroscope.

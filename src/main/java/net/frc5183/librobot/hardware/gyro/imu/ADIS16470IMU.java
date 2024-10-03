@@ -1,6 +1,7 @@
 package net.frc5183.librobot.hardware.gyro.imu;
 
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.SPI;
@@ -17,11 +18,30 @@ public class ADIS16470IMU extends IMU {
     private final ADIS16470_IMU imu;
 
     /**
+     * The YAW axis.
+     */
+    private final IMUAxis yaw;
+
+    /**
+     * The PITCH axis.
+     */
+    private final IMUAxis pitch;
+
+    /**
+     * The ROLL axis.
+     */
+    private final IMUAxis roll;
+
+    /**
      * Creates a new {@link ADIS16470IMU} using the RIO's Onboard MXP port and 500ms calibration time, and yaw pitch roll as ZXY respectively.
      * @see ADIS16470_IMU#ADIS16470_IMU()
      */
     public ADIS16470IMU() {
         imu = new ADIS16470_IMU();
+
+        yaw = imu.getYawAxis();
+        pitch = imu.getPitchAxis();
+        roll = imu.getRollAxis();
     }
 
     /**
@@ -77,8 +97,8 @@ public class ADIS16470IMU extends IMU {
     }
 
     @Override
-    public @NotNull Rotation3d getAccelerationMetersPerSecondSquared() {
-        return new Rotation3d(imu.getAccelX(), imu.getAccelY(), imu.getAccelZ());
+    public @NotNull Translation3d getAccelerationMetersPerSecondSquared() {
+        return new Translation3d(imu.getAccelX(), imu.getAccelY(), imu.getAccelZ());
     }
 
     @Override
@@ -98,14 +118,28 @@ public class ADIS16470IMU extends IMU {
 
     /**
      * Returns a new {@link ADIS16470_IMU.IMUAxis} from an {@link IMUAxis}.
-     * @param axis the {@link IMUAxis} to convert
-     * @return the converted {@link ADIS16470_IMU.IMUAxis}
+     * @param axis the {@link IMUAxis} to convert.
+     * @return the converted {@link ADIS16470_IMU.IMUAxis}.
      */
     public static ADIS16470_IMU.IMUAxis fromIMUAxis(IMUAxis axis) {
         return switch (axis) {
             case X -> ADIS16470_IMU.IMUAxis.kX;
             case Y -> ADIS16470_IMU.IMUAxis.kY;
             case Z -> ADIS16470_IMU.IMUAxis.kZ;
+        };
+    }
+
+    /**
+     * Returns a new {@link IMUAxis} from an {@link ADIS16470_IMU.IMUAxis}.
+     * @param axis the {@link IMUAxis} to convert.
+     * @return the converted {@link ADIS16470_IMU.IMUAxis}.
+     */
+    public static IMUAxis toIMUAxis(ADIS16470_IMU.IMUAxis axis) {
+        return switch (axis) {
+            case ADIS16470_IMU.IMUAxis.kX -> IMUAxis.X;
+            case ADIS16470_IMU.IMUAxis.kY -> IMUAxis.Y;
+            case ADIS16470_IMU.IMUAxis.kZ -> IMUAxis.Z;
+            default -> throw new IllegalArgumentException("IMU axis must be one of  " + axis);
         };
     }
 }
