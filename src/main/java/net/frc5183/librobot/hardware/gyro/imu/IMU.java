@@ -1,7 +1,6 @@
 package net.frc5183.librobot.hardware.gyro.imu;
 
 import edu.wpi.first.math.geometry.Rotation3d;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents an IMU (Inertial Measurement Unit).
@@ -16,7 +15,6 @@ public abstract class IMU {
      * Gets the rotation of the gyroscope (with offset) in degrees.
      * @return {@link Rotation3d} of the rotation of the gyroscope (with offset) in degrees.
      */
-    @NotNull
     public Rotation3d getRotation3dDegrees() {
         return getRawRotation3dDegrees().plus(getOffset());
     }
@@ -25,21 +23,19 @@ public abstract class IMU {
      * Gets the rotation of the gyroscope (without offset) in degrees.
      * @return {@link Rotation3d} of the rotation of the gyroscope (without offset) in degrees.
      */
-    @NotNull
     public abstract Rotation3d getRawRotation3dDegrees();
 
     /**
      * Gets the acceleration from the IMU in meters per second squared.
      * @return {@link Rotation3d} of the acceleration from the IMU in meters per second squared.
      */
-    @NotNull
     public abstract Rotation3d getAccelerationMetersPerSecondSquared();
 
     /**
      * Sets the offset of the gyroscope.
      * @param offset the offset of the gyroscope.
      */
-    public void setOffset(@NotNull Rotation3d offset) {
+    public void setOffset(Rotation3d offset) {
         this.offset = offset;
     }
 
@@ -47,7 +43,6 @@ public abstract class IMU {
      * Gets the offset of the gyroscope.
      * @return {@link Rotation3d} the offset of the gyroscope.
      */
-    @NotNull
     public Rotation3d getOffset() {
         return offset;
     }
@@ -70,7 +65,6 @@ public abstract class IMU {
      * (e.g the {@link ADIS16448IMU} would return {@link edu.wpi.first.wpilibj.ADIS16448_IMU})
      * @return the raw gyroscope object.
      */
-    @NotNull
     public abstract Object getRawIMU();
 
     /**
