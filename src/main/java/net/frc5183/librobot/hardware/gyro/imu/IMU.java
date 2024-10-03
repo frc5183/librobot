@@ -13,18 +13,18 @@ public abstract class IMU {
     private Rotation3d offset = new Rotation3d(0, 0, 0);
 
     /**
-     * Gets the rotation of the gyroscope (with offset) in degrees.
-     * @return {@link Rotation3d} of the rotation of the gyroscope (with offset) in degrees.
+     * Gets the rotation of the gyroscope (with offset) in radians.
+     * @return {@link Rotation3d} of the rotation of the gyroscope (with offset) in radians.
      */
-    public Rotation3d getRotation3dDegrees() {
-        return getRawRotation3dDegrees().plus(getOffset());
+    public Rotation3d getRotation3d() {
+        return getRawRotation3d().plus(getOffset());
     }
 
     /**
-     * Gets the rotation of the gyroscope (without offset) in degrees.
-     * @return {@link Rotation3d} of the rotation of the gyroscope (without offset) in degrees.
+     * Gets the rotation of the gyroscope (without offset) in radians.
+     * @return {@link Rotation3d} of the rotation of the gyroscope (without offset) in radians.
      */
-    public abstract Rotation3d getRawRotation3dDegrees();
+    public abstract Rotation3d getRawRotation3d();
 
     /**
      * Gets the acceleration from the IMU in meters per second squared.
@@ -33,16 +33,16 @@ public abstract class IMU {
     public abstract Translation3d getAccelerationMetersPerSecondSquared();
 
     /**
-     * Sets the offset of the gyroscope.
-     * @param offset the offset of the gyroscope.
+     * Sets the offset of the gyroscope in radians.
+     * @param offset the {@link Rotation3d} of the offset of the gyroscope in radians.
      */
     public void setOffset(Rotation3d offset) {
         this.offset = offset;
     }
 
     /**
-     * Gets the offset of the gyroscope.
-     * @return {@link Rotation3d} the offset of the gyroscope.
+     * Gets the offset of the gyroscope in radians.
+     * @return {@link Rotation3d} the offset of the gyroscope in radians.
      */
     public Rotation3d getOffset() {
         return offset;
