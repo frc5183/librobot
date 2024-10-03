@@ -8,6 +8,19 @@ group = 'net.frc5183.librobot'
 // This is used for Github Actions for nightly builds, otherwise, releases will use the version after "?:"
 def version = System.getenv("LIBROBOT_VERSION") ?: "2024.1.0"
 
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/frc5183/librobot"
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+}
+
 repositories {
     mavenCentral()
 
