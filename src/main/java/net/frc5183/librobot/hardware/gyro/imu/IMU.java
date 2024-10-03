@@ -16,15 +16,15 @@ public abstract class IMU {
      * Gets the rotation of the gyroscope (with offset) in radians.
      * @return {@link Rotation3d} of the rotation of the gyroscope (with offset) in radians.
      */
-    public Rotation3d getRotation3d() {
-        return getRawRotation3d().plus(getOffset());
+    public Rotation3d getRotation3dRadians() {
+        return getRawRotation3dRadians().plus(getOffset());
     }
 
     /**
      * Gets the rotation of the gyroscope (without offset) in radians.
      * @return {@link Rotation3d} of the rotation of the gyroscope (without offset) in radians.
      */
-    public abstract Rotation3d getRawRotation3d();
+    public abstract Rotation3d getRawRotation3dRadians();
 
     /**
      * Gets the acceleration from the IMU in meters per second squared.
