@@ -4,9 +4,12 @@ plugins {
 }
 
 group = 'net.frc5183.librobot'
+def releaseVersion = "2024.1.0"
 
-// This is used for Github Actions for nightly builds, otherwise, releases will use the version after "?:"
-def version = System.getenv("LIBROBOT_VERSION") ?: "2024.1.0"
+def version = releaseVersion
+if (System.getenv("LIBROBOT_VERSION") != null || ! System.getenv("LIBROBOT_VERSION").isEmpty()) {
+    version = System.getenv("LIBROBOT_VERSION")
+}
 
 publishing {
     repositories {
