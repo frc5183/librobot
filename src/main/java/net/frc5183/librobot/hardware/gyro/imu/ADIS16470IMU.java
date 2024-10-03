@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.SPI;
+import net.frc5183.librobot.hardware.gyro.single.SingleAxisGyroscope;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -91,6 +92,11 @@ public class ADIS16470IMU extends IMU {
     }
 
     @Override
+    public double getAngleRadians(@NotNull SingleAxisGyroscope.Axis axis) {
+        return imu.getAngle(fromSingleAxis(axis));
+    }
+
+    @Override
     public @NotNull Rotation3d getRawRotation3dRadians() {
         return new Rotation3d(
                 Math.toRadians(imu.getAngle(fromIMUAxis(IMUAxis.X))),
@@ -129,6 +135,19 @@ public class ADIS16470IMU extends IMU {
             case X -> ADIS16470_IMU.IMUAxis.kX;
             case Y -> ADIS16470_IMU.IMUAxis.kY;
             case Z -> ADIS16470_IMU.IMUAxis.kZ;
+        };
+    }
+
+    /**
+     * Returns a new {@link ADIS16470_IMU.IMUAxis} from an {@link SingleAxisGyroscope.Axis}
+     * @param axis the {@link SingleAxisGyroscope.Axis} to convert.
+     * @return the converted {@link ADIS16470_IMU.IMUAxis}
+     */
+    public static ADIS16470_IMU.IMUAxis fromSingleAxis(SingleAxisGyroscope.Axis axis) {
+        return switch (axis) {
+            case YAW -> ADIS16470_IMU.IMUAxis.kYaw;
+            case PITCH -> ADIS16470_IMU.IMUAxis.kPitch;
+            case ROLL -> ADIS16470_IMU.IMUAxis.kRoll;
         };
     }
 

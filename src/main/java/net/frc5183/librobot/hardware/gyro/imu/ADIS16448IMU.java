@@ -4,9 +4,8 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.SPI;
+import net.frc5183.librobot.hardware.gyro.single.SingleAxisGyroscope;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Optional;
 
 /**
  * Represents an ADIS16448 {@link IMU}.
@@ -106,6 +105,30 @@ public class ADIS16448IMU extends IMU {
         }
 
         imu = new ADIS16448_IMU(fromIMUAxis(yaw), port, calibrationTime);
+    }
+
+    @Override
+    public double getAngleRadians(@NotNull SingleAxisGyroscope.Axis axis) {
+        return switch (axis) {
+            case YAW ->
+                    switch (this.yaw) {
+                        case IMUAxis.X -> imu.getGyroAngleX();
+                        case IMUAxis.Y -> imu.getGyroAngleY();
+                        case IMUAxis.Z -> imu.getGyroAngleZ();
+                    };
+            case PITCH ->
+                    switch (this.pitch) {
+                        case IMUAxis.X -> imu.getGyroAngleX();
+                        case IMUAxis.Y -> imu.getGyroAngleY();
+                        case IMUAxis.Z -> imu.getGyroAngleZ();
+                    };
+            case ROLL ->
+                    switch (this.roll) {
+                        case IMUAxis.X -> imu.getGyroAngleX();
+                        case IMUAxis.Y -> imu.getGyroAngleY();
+                        case IMUAxis.Z -> imu.getGyroAngleZ();
+                    };
+        };
     }
 
     @Override

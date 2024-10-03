@@ -2,6 +2,7 @@ package net.frc5183.librobot.hardware.gyro.imu;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import net.frc5183.librobot.hardware.gyro.single.SingleAxisGyroscope;
 
 /**
  * Represents an IMU (Inertial Measurement Unit).
@@ -11,6 +12,12 @@ public abstract class IMU {
      * The offset to be added to the gyroscope.
      */
     private Rotation3d offset = new Rotation3d(0, 0, 0);
+
+    /**
+     * Gets the specified angle's rotation in radians.
+     * @return the angle's rotation in radians.
+     */
+    public abstract double getAngleRadians(SingleAxisGyroscope.Axis axis);
 
     /**
      * Gets the rotation of the gyroscope (with offset) in radians.
