@@ -6,10 +6,10 @@ plugins {
 group = 'net.frc5183.librobot'
 def releaseVersion = "2024.1.0"
 
-def version = releaseVersion
-if (System.getenv("LIBROBOT_VERSION") != null || ! System.getenv("LIBROBOT_VERSION").isEmpty()) {
-    version = System.getenv("LIBROBOT_VERSION")
-}
+version = releaseVersion
+if (System.getenv("LIBROBOT_VERSION") != null)
+    if (!System.getenv("LIBROBOT_VERSION").isEmpty())
+        version = System.getenv("LIBROBOT_VERSION")
 
 publishing {
     repositories {
@@ -25,9 +25,9 @@ publishing {
     
     publications {
         maven(MavenPublication) {
-            groupId = group
-            artifactId = 'librobot'
-            version = version
+            groupId = group as Publication
+            artifactId = 'librobot' as Publication
+            version = project.version.toString() as Publication
 
             from components.java
         }
