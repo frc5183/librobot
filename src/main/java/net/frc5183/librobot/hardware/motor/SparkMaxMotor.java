@@ -9,7 +9,7 @@ import net.frc5183.librobot.hardware.encoder.Encoder;
 import net.frc5183.librobot.hardware.encoder.SparkMaxEncoder;
 
 /**
- * A wrapper class around CANSparkMax to make it compatible with other motor types
+ * Represents a Spark Max motor controller.
  */
 public class SparkMaxMotor extends Motor implements EncodedMotor {
     private final CANSparkMax motor;
@@ -68,12 +68,7 @@ public class SparkMaxMotor extends Motor implements EncodedMotor {
         motor.stopMotor();
     }
 
-    @Override
-    public MotorController getRawMotor() {
-        return motor;
-    }
-
-    public CANSparkMax getTrueRawMotor() {
+    public CANSparkMax getRawMotor() {
         return motor;
     }
 
