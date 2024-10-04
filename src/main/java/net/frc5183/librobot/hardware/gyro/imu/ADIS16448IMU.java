@@ -109,6 +109,7 @@ public class ADIS16448IMU extends IMU {
 
     @Override
     public double getAngleRadians(@NotNull SingleAxisGyroscope.Axis axis) {
+        // todo: this has a lot of branching but im not sure if there's really a better way to do it
         return switch (axis) {
             case YAW ->
                     switch (this.yaw) {
@@ -133,11 +134,33 @@ public class ADIS16448IMU extends IMU {
 
     @Override
     public @NotNull Rotation3d getRawRotation3dRadians() {
-        return new Rotation3d(
-                Math.toRadians(imu.getGyroAngleX()),
-                Math.toRadians(imu.getGyroAngleY()),
-                Math.toRadians(imu.getGyroAngleZ())
-        );
+        double rollRadians;
+        double pitchRadians;
+        double yawRadians;
+
+        // todo: again, not too sure if there's a better way
+        if (this.roll == IMUAxis.X)
+            rollRadians = imu.getGyroAngleX();
+        else if (this.roll == IMUAxis.Y)
+            rollRadians = imu.getGyroAngleY();
+        else
+            rollRadians = imu.getGyroAngleZ();
+
+        if (this.pitch == IMUAxis.X)
+            pitchRadians = imu.getGyroAngleX();
+        else if (this.pitch == IMUAxis.Y)
+            pitchRadians = imu.getGyroAngleY();
+        else
+            pitchRadians = imu.getGyroAngleZ();
+
+        if (this.yaw == IMUAxis.X)
+            yawRadians = imu.getGyroAngleX();
+        else if (this.yaw == IMUAxis.Y)
+            yawRadians = imu.getGyroAngleY();
+        else
+            yawRadians = imu.getGyroAngleZ();
+
+        return new Rotation3d(rollRadians, pitchRadians, yawRadians);
     }
 
     @Override
