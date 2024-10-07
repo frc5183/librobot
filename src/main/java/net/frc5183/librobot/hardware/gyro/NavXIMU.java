@@ -97,19 +97,25 @@ public class NavXIMU extends IMU {
 
     @Override
     public double getRawAngleRadians(@NotNull CartesianAxis axis) {
-        return switch (axis) {
-            case Z -> imu.getYaw();
-            case Y -> imu.getPitch();
-            case X -> imu.getRoll();
-        };
+        Attitude attitude;
+
+        if (axis == yaw) {
+            attitude = Attitude.YAW;
+        } else if (axis == pitch) {
+            attitude = Attitude.PITCH;
+        } else {
+            attitude = Attitude.ROLL;
+        }
+
+        return getRawAngleRadians(attitude);
     }
 
     @Override
     public @NotNull Rotation3d getRawRotation3dRadians() {
         return new Rotation3d(
-                Math.toRadians(imu.getRoll()),
-                Math.toRadians(imu.getPitch()),
-                Math.toRadians(imu.getYaw())
+                getRawAngleRadians(Attitude.ROLL),
+                getRawAngleRadians(Attitude.PITCH),
+                getRawAngleRadians(Attitude.YAW)
         );
     }
 

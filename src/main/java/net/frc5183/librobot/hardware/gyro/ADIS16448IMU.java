@@ -91,27 +91,13 @@ public class ADIS16448IMU extends IMU {
 
     @Override
     public double getRawAngleRadians(@NotNull Attitude axis) {
-        // todo: this has a lot of branching but im not sure if there's really a better way to do it
-        return switch (axis) {
-            case YAW ->
-                    switch (this.yaw) {
-                        case X -> imu.getGyroAngleX();
-                        case Y -> imu.getGyroAngleY();
-                        case Z -> imu.getGyroAngleZ();
-                    };
-            case PITCH ->
-                    switch (this.pitch) {
-                        case X -> imu.getGyroAngleX();
-                        case Y -> imu.getGyroAngleY();
-                        case Z -> imu.getGyroAngleZ();
-                    };
-            case ROLL ->
-                    switch (this.roll) {
-                        case X -> imu.getGyroAngleX();
-                        case Y -> imu.getGyroAngleY();
-                        case Z -> imu.getGyroAngleZ();
-                    };
+        CartesianAxis cartesianAxis = switch (axis) {
+            case YAW -> yaw;
+            case PITCH -> pitch;
+            case ROLL -> roll;
         };
+
+        return getRawAngleRadians(cartesianAxis);
     }
 
     @Override
@@ -125,33 +111,11 @@ public class ADIS16448IMU extends IMU {
 
     @Override
     public @NotNull Rotation3d getRawRotation3dRadians() {
-        double rollRadians;
-        double pitchRadians;
-        double yawRadians;
-
-        // todo: again, not too sure if there's a better way
-        if (this.roll == CartesianAxis.X)
-            rollRadians = imu.getGyroAngleX();
-        else if (this.roll == CartesianAxis.Y)
-            rollRadians = imu.getGyroAngleY();
-        else
-            rollRadians = imu.getGyroAngleZ();
-
-        if (this.pitch == CartesianAxis.X)
-            pitchRadians = imu.getGyroAngleX();
-        else if (this.pitch == CartesianAxis.Y)
-            pitchRadians = imu.getGyroAngleY();
-        else
-            pitchRadians = imu.getGyroAngleZ();
-
-        if (this.yaw == CartesianAxis.X)
-            yawRadians = imu.getGyroAngleX();
-        else if (this.yaw == CartesianAxis.Y)
-            yawRadians = imu.getGyroAngleY();
-        else
-            yawRadians = imu.getGyroAngleZ();
-
-        return new Rotation3d(rollRadians, pitchRadians, yawRadians);
+        return new Rotation3d(
+                getRawAngleRadians(this.roll),
+                getRawAngleRadians(this.pitch),
+                getRawAngleRadians(this.yaw)
+        );
     }
 
     @Override

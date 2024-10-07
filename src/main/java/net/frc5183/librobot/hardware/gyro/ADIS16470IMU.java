@@ -123,9 +123,9 @@ public class ADIS16470IMU extends IMU {
     @Override
     public @NotNull Rotation3d getRawRotation3dRadians() {
         return new Rotation3d(
-                Math.toRadians(imu.getAngle(fromCartesian(this.roll))),
-                Math.toRadians(imu.getAngle(fromCartesian(this.pitch))),
-                Math.toRadians(imu.getAngle(fromCartesian(this.yaw)))
+                getRawAngleRadians(this.roll),
+                getRawAngleRadians(this.pitch),
+                getRawAngleRadians(this.yaw)
         );
     }
 
