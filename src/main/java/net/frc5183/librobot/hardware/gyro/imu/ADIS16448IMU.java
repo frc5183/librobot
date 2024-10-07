@@ -108,7 +108,7 @@ public class ADIS16448IMU extends IMU {
     }
 
     @Override
-    public double getAngleRadians(@NotNull SingleAxisGyroscope.Axis axis) {
+    public double getRawAngleRadians(@NotNull SingleAxisGyroscope.Axis axis) {
         // todo: this has a lot of branching but im not sure if there's really a better way to do it
         return switch (axis) {
             case YAW ->
@@ -129,6 +129,15 @@ public class ADIS16448IMU extends IMU {
                         case Y -> imu.getGyroAngleY();
                         case Z -> imu.getGyroAngleZ();
                     };
+        };
+    }
+
+    @Override
+    public double getRawAngleRadians(IMUAxis axis) {
+        return switch (axis) {
+            case X -> imu.getGyroAngleX();
+            case Y -> imu.getGyroAngleY();
+            case Z -> imu.getGyroAngleZ();
         };
     }
 
@@ -169,6 +178,15 @@ public class ADIS16448IMU extends IMU {
     }
 
     @Override
+    public double getAccelerationMetersPerSecondSquared(IMUAxis axis) {
+        return switch (axis) {
+            case X -> imu.getAccelX();
+            case Y -> imu.getAccelY();
+            case Z -> imu.getAccelZ();
+        };
+    }
+
+    @Override
     public void calibrate() {
         imu.calibrate();
     }
@@ -179,7 +197,33 @@ public class ADIS16448IMU extends IMU {
     }
 
     @Override
-    public @NotNull ADIS16448_IMU getRawIMU() {
+    public void factoryDefault() {
+        imu.calibrate();
+        super.setOffset(new Rotation3d());
+    }
+
+    @Override
+    public void clearStickyFaults() {
+        // The ADIS16448 IMU does not have a method for clearing sticky faults.
+    }
+
+    @Override
+    public @NotNull IMUAxis getYawAxis() {
+        return yaw;
+    }
+
+    @Override
+    public @NotNull IMUAxis getPitchAxis() {
+        return pitch;
+    }
+
+    @Override
+    public IMUAxis getRollAxis() {
+        return roll;
+    }
+
+    @Override
+    public @NotNull ADIS16448_IMU getIMU() {
         return imu;
     }
 
