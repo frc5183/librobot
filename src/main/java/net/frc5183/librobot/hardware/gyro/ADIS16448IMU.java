@@ -31,6 +31,7 @@ public class ADIS16448IMU extends IMU {
     /**
      * The roll axis.
      */
+    @NotNull
     private final CartesianAxis roll;
 
     /**
@@ -46,7 +47,7 @@ public class ADIS16448IMU extends IMU {
      * @param imu the ADIS16448 IMU to use.
      */
     public ADIS16448IMU(@NotNull ADIS16448_IMU imu) {
-        yaw = toIMUAxis(imu.getYawAxis());
+        yaw = toCartesian(imu.getYawAxis());
         CartesianAxis[] axes = CartesianAxis.assignAxes(yaw);
         pitch = axes[0];
         roll = axes[1];
@@ -85,7 +86,7 @@ public class ADIS16448IMU extends IMU {
         pitch = axes[0];
         roll = axes[1];
 
-        imu = new ADIS16448_IMU(fromIMUAxis(yaw), port, calibrationTime);
+        imu = new ADIS16448_IMU(fromCartesian(yaw), port, calibrationTime);
     }
 
     @Override
@@ -214,7 +215,7 @@ public class ADIS16448IMU extends IMU {
      * @return the converted {@link ADIS16448_IMU.IMUAxis}.
      */
     @NotNull
-    public static ADIS16448_IMU.IMUAxis fromIMUAxis(@NotNull CartesianAxis axis) {
+    public static ADIS16448_IMU.IMUAxis fromCartesian(@NotNull CartesianAxis axis) {
         return switch (axis) {
             case X -> ADIS16448_IMU.IMUAxis.kX;
             case Y -> ADIS16448_IMU.IMUAxis.kY;
@@ -222,14 +223,13 @@ public class ADIS16448IMU extends IMU {
         };
     }
 
-
     /**
      * Returns a new {@link CartesianAxis} from an {@link ADIS16448_IMU.IMUAxis}.
      * @param axis the {@link ADIS16448_IMU.IMUAxis} to convert.
      * @return the converted {@link CartesianAxis}.
      */
     @NotNull
-    public static CartesianAxis toIMUAxis(@NotNull ADIS16448_IMU.IMUAxis axis) {
+    public static CartesianAxis toCartesian(@NotNull ADIS16448_IMU.IMUAxis axis) {
         return switch (axis) {
             case kX -> CartesianAxis.X;
             case kY -> CartesianAxis.Y;

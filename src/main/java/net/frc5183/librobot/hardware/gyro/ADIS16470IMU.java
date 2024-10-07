@@ -46,9 +46,9 @@ public class ADIS16470IMU extends IMU {
     public ADIS16470IMU(@NotNull ADIS16470_IMU imu) {
         this.imu = imu;
 
-        yaw = toIMUAxis(imu.getYawAxis());
-        pitch = toIMUAxis(imu.getPitchAxis());
-        roll = toIMUAxis(imu.getRollAxis());
+        yaw = toCartesian(imu.getYawAxis());
+        pitch = toCartesian(imu.getPitchAxis());
+        roll = toCartesian(imu.getRollAxis());
     }
 
     /**
@@ -98,9 +98,9 @@ public class ADIS16470IMU extends IMU {
             @NotNull ADIS16470_IMU.CalibrationTime calibrationTime
     ) {
         imu = new ADIS16470_IMU(
-                fromIMUAxis(yaw),
-                fromIMUAxis(pitch),
-                fromIMUAxis(roll),
+                fromCartesian(yaw),
+                fromCartesian(pitch),
+                fromCartesian(roll),
                 port,
                 calibrationTime
         );
@@ -112,20 +112,20 @@ public class ADIS16470IMU extends IMU {
 
     @Override
     public double getRawAngleRadians(@NotNull Attitude axis) {
-        return imu.getAngle(fromSingleAxis(axis));
+        return imu.getAngle(fromAttitude(axis));
     }
 
     @Override
     public double getRawAngleRadians(@NotNull CartesianAxis axis) {
-        return imu.getAngle(fromIMUAxis(axis));
+        return imu.getAngle(fromCartesian(axis));
     }
 
     @Override
     public @NotNull Rotation3d getRawRotation3dRadians() {
         return new Rotation3d(
-                Math.toRadians(imu.getAngle(fromIMUAxis(this.roll))),
-                Math.toRadians(imu.getAngle(fromIMUAxis(this.pitch))),
-                Math.toRadians(imu.getAngle(fromIMUAxis(this.yaw)))
+                Math.toRadians(imu.getAngle(fromCartesian(this.roll))),
+                Math.toRadians(imu.getAngle(fromCartesian(this.pitch))),
+                Math.toRadians(imu.getAngle(fromCartesian(this.yaw)))
         );
     }
 
@@ -190,7 +190,7 @@ public class ADIS16470IMU extends IMU {
      * @return the converted {@link ADIS16470_IMU.IMUAxis}.
      */
     @NotNull
-    public static ADIS16470_IMU.IMUAxis fromIMUAxis(@NotNull CartesianAxis axis) {
+    public static ADIS16470_IMU.IMUAxis fromCartesian(@NotNull CartesianAxis axis) {
         return switch (axis) {
             case X -> ADIS16470_IMU.IMUAxis.kX;
             case Y -> ADIS16470_IMU.IMUAxis.kY;
@@ -204,7 +204,7 @@ public class ADIS16470IMU extends IMU {
      * @return the converted {@link ADIS16470_IMU.IMUAxis}
      */
     @NotNull
-    public static ADIS16470_IMU.IMUAxis fromSingleAxis(@NotNull Attitude axis) {
+    public static ADIS16470_IMU.IMUAxis fromAttitude(@NotNull Attitude axis) {
         return switch (axis) {
             case YAW -> ADIS16470_IMU.IMUAxis.kYaw;
             case PITCH -> ADIS16470_IMU.IMUAxis.kPitch;
@@ -218,7 +218,7 @@ public class ADIS16470IMU extends IMU {
      * @return the converted {@link CartesianAxis}.
      * @throws IllegalArgumentException if {@code axis} is not one of kX, kY, or kZ.
      */
-    public static CartesianAxis toIMUAxis(@NotNull ADIS16470_IMU.IMUAxis axis) {
+    public static CartesianAxis toCartesian(@NotNull ADIS16470_IMU.IMUAxis axis) {
         return switch (axis) {
             case kX -> CartesianAxis.X;
             case kY -> CartesianAxis.Y;
@@ -233,7 +233,7 @@ public class ADIS16470IMU extends IMU {
      * @return the converted {@link Attitude}.
      * @throws IllegalArgumentException if {@code axis} is not one of kYaw, kPitch, or kRoll.
      */
-    public static Attitude toSingleAxis(@NotNull ADIS16470_IMU.IMUAxis axis) {
+    public static Attitude toAttitude(@NotNull ADIS16470_IMU.IMUAxis axis) {
         return switch (axis) {
             case kYaw -> Attitude.YAW;
             case kPitch -> Attitude.PITCH;
