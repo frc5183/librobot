@@ -48,18 +48,9 @@ public class ADIS16448IMU extends IMU {
      */
     public ADIS16448IMU(@NotNull ADIS16448_IMU imu) {
         yaw = toIMUAxis(imu.getYawAxis());
-
-        //todo: confirm this is correct i had copilot do it
-        if (yaw == IMUAxis.X) {
-            pitch = IMUAxis.Y;
-            roll = IMUAxis.Z;
-        } else if (yaw == IMUAxis.Y) {
-            pitch = IMUAxis.X;
-            roll = IMUAxis.Z;
-        } else {
-            pitch = IMUAxis.X;
-            roll = IMUAxis.Y;
-        }
+        IMUAxis[] axes = IMUAxis.assignAxes(yaw);
+        pitch = axes[0];
+        roll = axes[1];
 
         this.imu = imu;
     }
@@ -91,18 +82,9 @@ public class ADIS16448IMU extends IMU {
      */
     public ADIS16448IMU(@NotNull IMUAxis yaw, @NotNull SPI.Port port, @NotNull ADIS16448_IMU.CalibrationTime calibrationTime) {
         this.yaw = yaw;
-
-        //todo: confirm this is correct i had copilot do it
-        if (yaw == IMUAxis.X) {
-            pitch = IMUAxis.Y;
-            roll = IMUAxis.Z;
-        } else if (yaw == IMUAxis.Y) {
-            pitch = IMUAxis.X;
-            roll = IMUAxis.Z;
-        } else {
-            pitch = IMUAxis.X;
-            roll = IMUAxis.Y;
-        }
+        IMUAxis[] axes = IMUAxis.assignAxes(yaw);
+        pitch = axes[0];
+        roll = axes[1];
 
         imu = new ADIS16448_IMU(fromIMUAxis(yaw), port, calibrationTime);
     }

@@ -202,6 +202,29 @@ public abstract class IMU extends SwerveIMU {
      * Represents the three axes of a gyroscope.
      */
     public enum IMUAxis {
-        X, Y, Z
+        X, Y, Z;
+
+        /**
+         * A utility method used to assign the pitch and roll axes based on the yaw axis.
+         * @param yaw the yaw axis.
+         * @return an array of the pitch and roll axes, index 0 and 1 respectively.
+         */
+        public static IMUAxis[] assignAxes(IMUAxis yaw) {
+            IMUAxis pitch;
+            IMUAxis roll;
+
+            if (yaw == IMUAxis.X) {
+                pitch = IMUAxis.Y;
+                roll = IMUAxis.Z;
+            } else if (yaw == IMUAxis.Y) {
+                pitch = IMUAxis.X;
+                roll = IMUAxis.Z;
+            } else {
+                pitch = IMUAxis.X;
+                roll = IMUAxis.Y;
+            }
+
+            return new IMUAxis[]{pitch, roll};
+        }
     }
 }
