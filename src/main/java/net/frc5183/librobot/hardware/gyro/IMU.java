@@ -212,15 +212,15 @@ public abstract class IMU extends SwerveIMU {
             CartesianAxis pitch;
             CartesianAxis roll;
 
-            if (yaw == CartesianAxis.X) {
-                pitch = CartesianAxis.Y;
-                roll = CartesianAxis.Z;
-            } else if (yaw == CartesianAxis.Y) {
-                pitch = CartesianAxis.X;
-                roll = CartesianAxis.Z;
+            if (yaw == X) {
+                pitch = Y;
+                roll = Z;
+            } else if (yaw == Y) {
+                pitch = X;
+                roll = Z;
             } else {
-                pitch = CartesianAxis.X;
-                roll = CartesianAxis.Y;
+                pitch = X;
+                roll = Y;
             }
 
             return new CartesianAxis[]{pitch, roll};
