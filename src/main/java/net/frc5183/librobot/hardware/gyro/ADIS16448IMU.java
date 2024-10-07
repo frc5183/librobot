@@ -1,10 +1,9 @@
-package net.frc5183.librobot.hardware.gyro.imu;
+package net.frc5183.librobot.hardware.gyro;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.SPI;
-import net.frc5183.librobot.hardware.gyro.single.SingleAxisGyroscope;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -21,18 +20,18 @@ public class ADIS16448IMU extends IMU {
      * The yaw axis.
      */
     @NotNull
-    private final IMUAxis yaw;
+    private final CartesianAxis yaw;
 
     /**
      * The pitch axis.
      */
     @NotNull
-    private final IMUAxis pitch;
+    private final CartesianAxis pitch;
 
     /**
      * The roll axis.
      */
-    private final IMUAxis roll;
+    private final CartesianAxis roll;
 
     /**
      * Creates a new {@link ADIS16448IMU} using the RIO's Onboard MXP port, 500ms calibration time, and Z axis as yaw.
@@ -48,7 +47,7 @@ public class ADIS16448IMU extends IMU {
      */
     public ADIS16448IMU(@NotNull ADIS16448_IMU imu) {
         yaw = toIMUAxis(imu.getYawAxis());
-        IMUAxis[] axes = IMUAxis.assignAxes(yaw);
+        CartesianAxis[] axes = CartesianAxis.assignAxes(yaw);
         pitch = axes[0];
         roll = axes[1];
 
@@ -60,7 +59,7 @@ public class ADIS16448IMU extends IMU {
      * Uses default RIO's Onboard MXP port and 512ms calibration time.
      * @param yaw the YAW axis.
      */
-    public ADIS16448IMU(@NotNull IMUAxis yaw) {
+    public ADIS16448IMU(@NotNull CartesianAxis yaw) {
         this(yaw, SPI.Port.kMXP);
     }
 
@@ -70,7 +69,7 @@ public class ADIS16448IMU extends IMU {
      * @param yaw the YAW axis.
      * @param port the SPI port.
      */
-    public ADIS16448IMU(@NotNull IMUAxis yaw, @NotNull SPI.Port port) {
+    public ADIS16448IMU(@NotNull CartesianAxis yaw, @NotNull SPI.Port port) {
         this(yaw, port, ADIS16448_IMU.CalibrationTime._512ms);
     }
 
@@ -80,9 +79,9 @@ public class ADIS16448IMU extends IMU {
      * @param port the SPI port.
      * @param calibrationTime the calibration time.
      */
-    public ADIS16448IMU(@NotNull IMUAxis yaw, @NotNull SPI.Port port, @NotNull ADIS16448_IMU.CalibrationTime calibrationTime) {
+    public ADIS16448IMU(@NotNull CartesianAxis yaw, @NotNull SPI.Port port, @NotNull ADIS16448_IMU.CalibrationTime calibrationTime) {
         this.yaw = yaw;
-        IMUAxis[] axes = IMUAxis.assignAxes(yaw);
+        CartesianAxis[] axes = CartesianAxis.assignAxes(yaw);
         pitch = axes[0];
         roll = axes[1];
 
@@ -90,7 +89,7 @@ public class ADIS16448IMU extends IMU {
     }
 
     @Override
-    public double getRawAngleRadians(@NotNull SingleAxisGyroscope.Axis axis) {
+    public double getRawAngleRadians(@NotNull Attitude axis) {
         // todo: this has a lot of branching but im not sure if there's really a better way to do it
         return switch (axis) {
             case YAW ->
@@ -115,7 +114,7 @@ public class ADIS16448IMU extends IMU {
     }
 
     @Override
-    public double getRawAngleRadians(IMUAxis axis) {
+    public double getRawAngleRadians(CartesianAxis axis) {
         return switch (axis) {
             case X -> imu.getGyroAngleX();
             case Y -> imu.getGyroAngleY();
@@ -130,23 +129,23 @@ public class ADIS16448IMU extends IMU {
         double yawRadians;
 
         // todo: again, not too sure if there's a better way
-        if (this.roll == IMUAxis.X)
+        if (this.roll == CartesianAxis.X)
             rollRadians = imu.getGyroAngleX();
-        else if (this.roll == IMUAxis.Y)
+        else if (this.roll == CartesianAxis.Y)
             rollRadians = imu.getGyroAngleY();
         else
             rollRadians = imu.getGyroAngleZ();
 
-        if (this.pitch == IMUAxis.X)
+        if (this.pitch == CartesianAxis.X)
             pitchRadians = imu.getGyroAngleX();
-        else if (this.pitch == IMUAxis.Y)
+        else if (this.pitch == CartesianAxis.Y)
             pitchRadians = imu.getGyroAngleY();
         else
             pitchRadians = imu.getGyroAngleZ();
 
-        if (this.yaw == IMUAxis.X)
+        if (this.yaw == CartesianAxis.X)
             yawRadians = imu.getGyroAngleX();
-        else if (this.yaw == IMUAxis.Y)
+        else if (this.yaw == CartesianAxis.Y)
             yawRadians = imu.getGyroAngleY();
         else
             yawRadians = imu.getGyroAngleZ();
@@ -160,7 +159,7 @@ public class ADIS16448IMU extends IMU {
     }
 
     @Override
-    public double getAccelerationMetersPerSecondSquared(IMUAxis axis) {
+    public double getAccelerationMetersPerSecondSquared(CartesianAxis axis) {
         return switch (axis) {
             case X -> imu.getAccelX();
             case Y -> imu.getAccelY();
@@ -190,17 +189,17 @@ public class ADIS16448IMU extends IMU {
     }
 
     @Override
-    public @NotNull IMUAxis getYawAxis() {
+    public @NotNull CartesianAxis getYawAxis() {
         return yaw;
     }
 
     @Override
-    public @NotNull IMUAxis getPitchAxis() {
+    public @NotNull CartesianAxis getPitchAxis() {
         return pitch;
     }
 
     @Override
-    public IMUAxis getRollAxis() {
+    public CartesianAxis getRollAxis() {
         return roll;
     }
 
@@ -210,12 +209,12 @@ public class ADIS16448IMU extends IMU {
     }
 
     /**
-     * Returns a new {@link ADIS16448_IMU.IMUAxis} from an {@link IMUAxis}.
-     * @param axis the {@link IMUAxis} to convert.
+     * Returns a new {@link ADIS16448_IMU.IMUAxis} from an {@link CartesianAxis}.
+     * @param axis the {@link CartesianAxis} to convert.
      * @return the converted {@link ADIS16448_IMU.IMUAxis}.
      */
     @NotNull
-    public static ADIS16448_IMU.IMUAxis fromIMUAxis(@NotNull IMUAxis axis) {
+    public static ADIS16448_IMU.IMUAxis fromIMUAxis(@NotNull CartesianAxis axis) {
         return switch (axis) {
             case X -> ADIS16448_IMU.IMUAxis.kX;
             case Y -> ADIS16448_IMU.IMUAxis.kY;
@@ -225,16 +224,16 @@ public class ADIS16448IMU extends IMU {
 
 
     /**
-     * Returns a new {@link IMUAxis} from an {@link ADIS16448_IMU.IMUAxis}.
+     * Returns a new {@link CartesianAxis} from an {@link ADIS16448_IMU.IMUAxis}.
      * @param axis the {@link ADIS16448_IMU.IMUAxis} to convert.
-     * @return the converted {@link IMUAxis}.
+     * @return the converted {@link CartesianAxis}.
      */
     @NotNull
-    public static IMUAxis toIMUAxis(@NotNull ADIS16448_IMU.IMUAxis axis) {
+    public static CartesianAxis toIMUAxis(@NotNull ADIS16448_IMU.IMUAxis axis) {
         return switch (axis) {
-            case kX -> IMUAxis.X;
-            case kY -> IMUAxis.Y;
-            case kZ -> IMUAxis.Z;
+            case kX -> CartesianAxis.X;
+            case kY -> CartesianAxis.Y;
+            case kZ -> CartesianAxis.Z;
         };
     }
 }

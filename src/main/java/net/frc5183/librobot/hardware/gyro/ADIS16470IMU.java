@@ -1,10 +1,9 @@
-package net.frc5183.librobot.hardware.gyro.imu;
+package net.frc5183.librobot.hardware.gyro;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.SPI;
-import net.frc5183.librobot.hardware.gyro.single.SingleAxisGyroscope;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -20,17 +19,17 @@ public class ADIS16470IMU extends IMU {
     /**
      * The YAW axis.
      */
-    private final IMUAxis yaw;
+    private final CartesianAxis yaw;
 
     /**
      * The PITCH axis.
      */
-    private final IMUAxis pitch;
+    private final CartesianAxis pitch;
 
     /**
      * The ROLL axis.
      */
-    private final IMUAxis roll;
+    private final CartesianAxis roll;
 
     /**
      * Creates a new {@link ADIS16470IMU} using the RIO's Onboard MXP port and 4s calibration time, and yaw pitch roll as ZXY respectively.
@@ -60,9 +59,9 @@ public class ADIS16470IMU extends IMU {
      * @param roll the ROLL axis.
      */
     public ADIS16470IMU(
-            @NotNull IMUAxis yaw,
-            @NotNull IMUAxis pitch,
-            @NotNull IMUAxis roll) {
+            @NotNull CartesianAxis yaw,
+            @NotNull CartesianAxis pitch,
+            @NotNull CartesianAxis roll) {
         this(yaw, pitch, roll, SPI.Port.kMXP);
     }
 
@@ -75,9 +74,9 @@ public class ADIS16470IMU extends IMU {
      * @param port the SPI port.
      */
     public ADIS16470IMU(
-            @NotNull IMUAxis yaw,
-            @NotNull IMUAxis pitch,
-            @NotNull IMUAxis roll,
+            @NotNull CartesianAxis yaw,
+            @NotNull CartesianAxis pitch,
+            @NotNull CartesianAxis roll,
             @NotNull SPI.Port port
     ) {
         this(yaw, pitch, roll, port, ADIS16470_IMU.CalibrationTime._4s);
@@ -92,9 +91,9 @@ public class ADIS16470IMU extends IMU {
      * @param calibrationTime the calibration time.
      */
     public ADIS16470IMU(
-            @NotNull IMUAxis yaw,
-            @NotNull IMUAxis pitch,
-            @NotNull IMUAxis roll,
+            @NotNull CartesianAxis yaw,
+            @NotNull CartesianAxis pitch,
+            @NotNull CartesianAxis roll,
             @NotNull SPI.Port port,
             @NotNull ADIS16470_IMU.CalibrationTime calibrationTime
     ) {
@@ -112,12 +111,12 @@ public class ADIS16470IMU extends IMU {
     }
 
     @Override
-    public double getRawAngleRadians(@NotNull SingleAxisGyroscope.Axis axis) {
+    public double getRawAngleRadians(@NotNull Attitude axis) {
         return imu.getAngle(fromSingleAxis(axis));
     }
 
     @Override
-    public double getRawAngleRadians(@NotNull IMUAxis axis) {
+    public double getRawAngleRadians(@NotNull CartesianAxis axis) {
         return imu.getAngle(fromIMUAxis(axis));
     }
 
@@ -136,7 +135,7 @@ public class ADIS16470IMU extends IMU {
     }
 
     @Override
-    public double getAccelerationMetersPerSecondSquared(IMUAxis axis) {
+    public double getAccelerationMetersPerSecondSquared(CartesianAxis axis) {
         return switch (axis) {
             case X -> imu.getAccelX();
             case Y -> imu.getAccelY();
@@ -166,17 +165,17 @@ public class ADIS16470IMU extends IMU {
     }
 
     @Override
-    public IMUAxis getYawAxis() {
+    public CartesianAxis getYawAxis() {
         return yaw;
     }
 
     @Override
-    public IMUAxis getPitchAxis() {
+    public CartesianAxis getPitchAxis() {
         return pitch;
     }
 
     @Override
-    public IMUAxis getRollAxis() {
+    public CartesianAxis getRollAxis() {
         return roll;
     }
 
@@ -186,12 +185,12 @@ public class ADIS16470IMU extends IMU {
     }
 
     /**
-     * Returns a new {@link ADIS16470_IMU.IMUAxis} from an {@link IMUAxis}.
-     * @param axis the {@link IMUAxis} to convert.
+     * Returns a new {@link ADIS16470_IMU.IMUAxis} from an {@link CartesianAxis}.
+     * @param axis the {@link CartesianAxis} to convert.
      * @return the converted {@link ADIS16470_IMU.IMUAxis}.
      */
     @NotNull
-    public static ADIS16470_IMU.IMUAxis fromIMUAxis(@NotNull IMUAxis axis) {
+    public static ADIS16470_IMU.IMUAxis fromIMUAxis(@NotNull CartesianAxis axis) {
         return switch (axis) {
             case X -> ADIS16470_IMU.IMUAxis.kX;
             case Y -> ADIS16470_IMU.IMUAxis.kY;
@@ -200,12 +199,12 @@ public class ADIS16470IMU extends IMU {
     }
 
     /**
-     * Returns a new {@link ADIS16470_IMU.IMUAxis} from an {@link SingleAxisGyroscope.Axis}
-     * @param axis the {@link SingleAxisGyroscope.Axis} to convert.
+     * Returns a new {@link ADIS16470_IMU.IMUAxis} from an {@link Attitude}
+     * @param axis the {@link Attitude} to convert.
      * @return the converted {@link ADIS16470_IMU.IMUAxis}
      */
     @NotNull
-    public static ADIS16470_IMU.IMUAxis fromSingleAxis(@NotNull SingleAxisGyroscope.Axis axis) {
+    public static ADIS16470_IMU.IMUAxis fromSingleAxis(@NotNull Attitude axis) {
         return switch (axis) {
             case YAW -> ADIS16470_IMU.IMUAxis.kYaw;
             case PITCH -> ADIS16470_IMU.IMUAxis.kPitch;
@@ -214,31 +213,31 @@ public class ADIS16470IMU extends IMU {
     }
 
     /**
-     * Returns a new {@link IMUAxis} from an {@link ADIS16470_IMU.IMUAxis}.
+     * Returns a new {@link CartesianAxis} from an {@link ADIS16470_IMU.IMUAxis}.
      * @param axis the {@link ADIS16470_IMU.IMUAxis} to convert.
-     * @return the converted {@link IMUAxis}.
+     * @return the converted {@link CartesianAxis}.
      * @throws IllegalArgumentException if {@code axis} is not one of kX, kY, or kZ.
      */
-    public static IMUAxis toIMUAxis(@NotNull ADIS16470_IMU.IMUAxis axis) {
+    public static CartesianAxis toIMUAxis(@NotNull ADIS16470_IMU.IMUAxis axis) {
         return switch (axis) {
-            case kX -> IMUAxis.X;
-            case kY -> IMUAxis.Y;
-            case kZ -> IMUAxis.Z;
+            case kX -> CartesianAxis.X;
+            case kY -> CartesianAxis.Y;
+            case kZ -> CartesianAxis.Z;
             default -> throw new IllegalArgumentException("ADIS16470_IMU Axis must be one of kX, kY, or kZ. Was: " + axis);
         };
     }
 
     /**
-     * Returns a new {@link SingleAxisGyroscope.Axis} from an {@link ADIS16470_IMU.IMUAxis}.
+     * Returns a new {@link Attitude} from an {@link ADIS16470_IMU.IMUAxis}.
      * @param axis the {@link ADIS16470_IMU.IMUAxis} to convert.
-     * @return the converted {@link SingleAxisGyroscope.Axis}.
+     * @return the converted {@link Attitude}.
      * @throws IllegalArgumentException if {@code axis} is not one of kYaw, kPitch, or kRoll.
      */
-    public static SingleAxisGyroscope.Axis toSingleAxis(@NotNull ADIS16470_IMU.IMUAxis axis) {
+    public static Attitude toSingleAxis(@NotNull ADIS16470_IMU.IMUAxis axis) {
         return switch (axis) {
-            case kYaw -> SingleAxisGyroscope.Axis.YAW;
-            case kPitch -> SingleAxisGyroscope.Axis.PITCH;
-            case kRoll -> SingleAxisGyroscope.Axis.ROLL;
+            case kYaw -> Attitude.YAW;
+            case kPitch -> Attitude.PITCH;
+            case kRoll -> Attitude.ROLL;
             default -> throw new IllegalArgumentException("ADIS16470_IMU Axis must be one of kYaw, kPitch, or kRoll. Was" + axis);
         };
     }

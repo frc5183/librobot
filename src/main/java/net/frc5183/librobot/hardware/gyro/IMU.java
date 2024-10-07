@@ -1,8 +1,7 @@
-package net.frc5183.librobot.hardware.gyro.imu;
+package net.frc5183.librobot.hardware.gyro;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
-import net.frc5183.librobot.hardware.gyro.single.SingleAxisGyroscope;
 import swervelib.imu.SwerveIMU;
 
 import java.util.Optional;
@@ -23,10 +22,10 @@ public abstract class IMU extends SwerveIMU {
 
     /**
      * Gets the specified angle's rotation (with offset) in radians.
-     * @param axis the {@link IMUAxis} to get the angle's rotation of.
+     * @param axis the {@link CartesianAxis} to get the angle's rotation of.
      * @return the angle's rotation (with offset) in radians.
      */
-    public double getAngleRadians(IMUAxis axis) {
+    public double getAngleRadians(CartesianAxis axis) {
         return switch (axis) {
             case Z -> getRawAngleRadians(axis) + offset.getZ();
             case Y -> getRawAngleRadians(axis) + offset.getY();
@@ -36,10 +35,10 @@ public abstract class IMU extends SwerveIMU {
 
     /**
      * Gets the specified angle's rotation (with offset) in radians.
-     * @param axis the {@link SingleAxisGyroscope.Axis} to get the angle's rotation of.
+     * @param axis the {@link Attitude} to get the angle's rotation of.
      * @return the angle's rotation (with offset) in radians.
      */
-    public double getAngleRadians(SingleAxisGyroscope.Axis axis) {
+    public double getAngleRadians(Attitude axis) {
         return switch (axis) {
             case YAW -> getRawAngleRadians(axis) + offset.getZ();
             case PITCH -> getRawAngleRadians(axis) + offset.getY();
@@ -49,17 +48,17 @@ public abstract class IMU extends SwerveIMU {
 
     /**
      * Gets the specified angle's rotation (without offset) in radians.
-     * @param axis the {@link SingleAxisGyroscope.Axis} to get the angle's rotation of.
+     * @param axis the {@link Attitude} to get the angle's rotation of.
      * @return the angle's rotation (without offset) in radians.
      */
-    public abstract double getRawAngleRadians(SingleAxisGyroscope.Axis axis);
+    public abstract double getRawAngleRadians(Attitude axis);
 
     /**
      * Gets the specified angle's rotation (without offset) in radians.
-     * @param axis the {@link IMUAxis} to get the angle's rotation of.
+     * @param axis the {@link CartesianAxis} to get the angle's rotation of.
      * @return the angle's rotation (without offset) in radians.
      */
-    public abstract double getRawAngleRadians(IMUAxis axis);
+    public abstract double getRawAngleRadians(CartesianAxis axis);
 
     /**
      * Gets the rotation of the gyroscope (with offset and inverted state) in radians.
@@ -113,10 +112,10 @@ public abstract class IMU extends SwerveIMU {
 
     /**
      * Gets the acceleration from the IMU in meters per second squared on a specific axis.
-     * @param axis the {@link IMUAxis} to get the acceleration of.
+     * @param axis the {@link CartesianAxis} to get the acceleration of.
      * @return the acceleration from the IMU in meters per second squared on a specific axis.
      */
-    public abstract double getAccelerationMetersPerSecondSquared(IMUAxis axis);
+    public abstract double getAccelerationMetersPerSecondSquared(CartesianAxis axis);
 
     /**
      * Sets the offset of the gyroscope in radians.
@@ -171,22 +170,22 @@ public abstract class IMU extends SwerveIMU {
     public abstract void clearStickyFaults();
 
     /**
-     * Returns the {@link IMUAxis} of the yaw.
-     * @return the {@link IMUAxis} of the yaw.
+     * Returns the {@link CartesianAxis} of the yaw.
+     * @return the {@link CartesianAxis} of the yaw.
      */
-    public abstract IMUAxis getYawAxis();
+    public abstract CartesianAxis getYawAxis();
 
     /**
-     * Returns the {@link IMUAxis} of the pitch.
-     * @return the {@link IMUAxis} of the pitch.
+     * Returns the {@link CartesianAxis} of the pitch.
+     * @return the {@link CartesianAxis} of the pitch.
      */
-    public abstract IMUAxis getPitchAxis();
+    public abstract CartesianAxis getPitchAxis();
 
     /**
-     * Returns the {@link IMUAxis} of the roll.
-     * @return the {@link IMUAxis} of the roll.
+     * Returns the {@link CartesianAxis} of the roll.
+     * @return the {@link CartesianAxis} of the roll.
      */
-    public abstract IMUAxis getRollAxis();
+    public abstract CartesianAxis getRollAxis();
 
     /**
      * Returns the raw gyroscope object.
@@ -199,9 +198,9 @@ public abstract class IMU extends SwerveIMU {
     public abstract Object getIMU();
 
     /**
-     * Represents the three axes of a gyroscope.
+     * Represents the cartesian axes of a gyroscope (xyz).
      */
-    public enum IMUAxis {
+    public enum CartesianAxis {
         X, Y, Z;
 
         /**
@@ -209,22 +208,29 @@ public abstract class IMU extends SwerveIMU {
          * @param yaw the yaw axis.
          * @return an array of the pitch and roll axes, index 0 and 1 respectively.
          */
-        public static IMUAxis[] assignAxes(IMUAxis yaw) {
-            IMUAxis pitch;
-            IMUAxis roll;
+        public static CartesianAxis[] assignAxes(CartesianAxis yaw) {
+            CartesianAxis pitch;
+            CartesianAxis roll;
 
-            if (yaw == IMUAxis.X) {
-                pitch = IMUAxis.Y;
-                roll = IMUAxis.Z;
-            } else if (yaw == IMUAxis.Y) {
-                pitch = IMUAxis.X;
-                roll = IMUAxis.Z;
+            if (yaw == CartesianAxis.X) {
+                pitch = CartesianAxis.Y;
+                roll = CartesianAxis.Z;
+            } else if (yaw == CartesianAxis.Y) {
+                pitch = CartesianAxis.X;
+                roll = CartesianAxis.Z;
             } else {
-                pitch = IMUAxis.X;
-                roll = IMUAxis.Y;
+                pitch = CartesianAxis.X;
+                roll = CartesianAxis.Y;
             }
 
-            return new IMUAxis[]{pitch, roll};
+            return new CartesianAxis[]{pitch, roll};
         }
+    }
+
+    /**
+     * Represents the attitude of a gyroscope (yaw, pitch, roll).
+     */
+    public enum Attitude {
+        YAW, PITCH, ROLL
     }
 }
