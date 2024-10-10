@@ -53,6 +53,7 @@ public class ADIS16448IMU extends IMU {
         roll = axes[1];
 
         this.imu = imu;
+        factoryDefault();
     }
 
     /**
@@ -81,12 +82,7 @@ public class ADIS16448IMU extends IMU {
      * @param calibrationTime the calibration time.
      */
     public ADIS16448IMU(@NotNull CartesianAxis yaw, @NotNull SPI.Port port, @NotNull ADIS16448_IMU.CalibrationTime calibrationTime) {
-        this.yaw = yaw;
-        CartesianAxis[] axes = CartesianAxis.assignAxes(yaw);
-        pitch = axes[0];
-        roll = axes[1];
-
-        imu = new ADIS16448_IMU(fromCartesian(yaw), port, calibrationTime);
+        this(new ADIS16448_IMU(fromCartesian(yaw), port, calibrationTime));
     }
 
     @Override
@@ -103,9 +99,9 @@ public class ADIS16448IMU extends IMU {
     @Override
     public double getRawAngleRadians(CartesianAxis axis) {
         return switch (axis) {
-            case X -> imu.getGyroAngleX();
-            case Y -> imu.getGyroAngleY();
-            case Z -> imu.getGyroAngleZ();
+            case X -> Math.toRadians(imu.getGyroAngleX());
+            case Y -> Math.toRadians(imu.getGyroAngleY());
+            case Z -> Math.toRadians(imu.getGyroAngleZ());
         };
     }
 
@@ -145,7 +141,10 @@ public class ADIS16448IMU extends IMU {
     @Override
     public void factoryDefault() {
         imu.calibrate();
-        super.setOffset(new Rotation3d());
+        super.setOffset(null);
+        super.setOffsetX(0);
+        super.setOffsetY(0);
+        super.setOffsetZ(0);
     }
 
     @Override

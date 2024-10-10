@@ -2,8 +2,10 @@ package net.frc5183.librobot.hardware.gyro;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import org.jetbrains.annotations.Nullable;
 import swervelib.imu.SwerveIMU;
 
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -16,9 +18,27 @@ public abstract class IMU extends SwerveIMU {
     private boolean inverted = false;
 
     /**
-     * The offset to be added to the gyroscope.
+     * The {@link Rotation3d} offset of the gyroscope.
+     * @deprecated use {@link #offsetX}, {@link #offsetY}, and {@link #offsetZ} instead, this only exists for YAGSL.<br>Changes are not reflected on {@link #offsetX}, {@link #offsetY}, and {@link #offsetZ}.
      */
-    private Rotation3d offset = new Rotation3d(0, 0, 0);
+    @Deprecated
+    @Nullable
+    private Rotation3d offset;
+
+    /**
+     * The offset to be subtracted from the gyroscope's X axis (in radians).
+     */
+    private double offsetX;
+
+    /**
+     * The offset to be subtracted from the gyroscope's Y axis (in radians).
+     */
+    private double offsetY;
+
+    /**
+     * The offset to be subtracted from the gyroscope's Z axis (in radians).
+     */
+    private double offsetZ;
 
     /**
      * Gets the specified angle's rotation (with offset) in radians.
@@ -27,9 +47,9 @@ public abstract class IMU extends SwerveIMU {
      */
     public double getAngleRadians(CartesianAxis axis) {
         return switch (axis) {
-            case Z -> getRawAngleRadians(axis) + offset.getZ();
-            case Y -> getRawAngleRadians(axis) + offset.getY();
-            case X -> getRawAngleRadians(axis) + offset.getX();
+            case Z -> getRawAngleRadians(axis) - offsetZ;
+            case Y -> getRawAngleRadians(axis) - offsetY;
+            case X -> getRawAngleRadians(axis) - offsetX;
         };
     }
 
@@ -40,9 +60,9 @@ public abstract class IMU extends SwerveIMU {
      */
     public double getAngleRadians(Attitude axis) {
         return switch (axis) {
-            case YAW -> getRawAngleRadians(axis) + offset.getZ();
-            case PITCH -> getRawAngleRadians(axis) + offset.getY();
-            case ROLL -> getRawAngleRadians(axis) + offset.getX();
+            case YAW -> getAngleRadians(getYawAxis());
+            case PITCH -> getAngleRadians(getPitchAxis());
+            case ROLL -> getAngleRadians(getRollAxis());
         };
     }
 
@@ -118,19 +138,85 @@ public abstract class IMU extends SwerveIMU {
     public abstract double getAccelerationMetersPerSecondSquared(CartesianAxis axis);
 
     /**
-     * Sets the offset of the gyroscope in radians.
-     * @param offset the {@link Rotation3d} of the offset of the gyroscope in radians.
+     * Returns the offset as a {@link Rotation3d}.
+     * <br><br>
+     * If {@link #offset} is null, it will be calculated from {@link #offsetX}, {@link #offsetY}, and {@link #offsetZ}.
+     * @return the offset as a {@link Rotation3d}.
+     * @deprecated use {@link #getOffsetX()}, {@link #getOffsetY()}, and {@link #getOffsetZ()} instead, this only exists for YAGSL.
      */
-    public void setOffset(Rotation3d offset) {
+    @Deprecated
+    public Rotation3d getOffset() {
+        if (offset != null) return offset;
+
+        Map<CartesianAxis, Double> offset = Map.of(
+                CartesianAxis.X, offsetX,
+                CartesianAxis.Y, offsetY,
+                CartesianAxis.Z, offsetZ
+        );
+
+        return new Rotation3d(
+                offset.get(getYawAxis()),
+                offset.get(getPitchAxis()),
+                offset.get(getRollAxis())
+        );
+    }
+
+    /**
+     * Sets the offset as a {@link Rotation3d}.
+     * @param offset the offset as a {@link Rotation3d}.
+     * @deprecated use {@link #setOffsetX(double)}, {@link #setOffsetY(double)}, and {@link #setOffsetZ(double)} instead, this only exists for YAGSL.<br>Changes are not reflected on {@link #offsetX}, {@link #offsetY}, and {@link #offsetZ}.
+     */
+    @Deprecated
+    public void setOffset(@Nullable Rotation3d offset) {
         this.offset = offset;
     }
 
     /**
-     * Gets the offset of the gyroscope in radians.
-     * @return {@link Rotation3d} the offset of the gyroscope in radians.
+     * Returns the offset to be subtracted from the gyroscope's rotation.
+     * @return the offset to be subtracted from the gyroscope's rotation.
      */
-    public Rotation3d getOffset() {
-        return offset;
+    public double getOffsetX() {
+        return offsetX;
+    }
+
+    /**
+     * Sets the offset to be subtracted from the gyroscope's rotation.
+     * @param offsetX the offset to be subtracted from the gyroscope's rotation.
+     */
+    public void setOffsetX(double offsetX) {
+        this.offsetX = offsetX;
+    }
+
+    /**
+     * Returns the offset to be subtracted from the gyroscope's rotation.
+     * @return the offset to be subtracted from the gyroscope's rotation.
+     */
+    public double getOffsetY() {
+        return offsetY;
+    }
+
+    /**
+     * Sets the offset to be subtracted from the gyroscope's rotation.
+     * @param offsetY the offset to be subtracted from the gyroscope's rotation.
+     */
+    public void setOffsetY(double offsetY) {
+        this.offsetY = offsetY;
+    }
+
+    /**
+     * Returns the offset to be subtracted from the gyroscope's rotation.
+     * @return the offset to be subtracted from the gyroscope's rotation.
+     */
+    public double getOffsetZ() {
+        return offsetZ;
+    }
+
+    /**
+     * Sets the offset to be subtracted from the gyroscope's rotation.
+     * @param offsetZ the offset to be subtracted from the gyroscope's rotation.
+     */
+    public void setOffsetZ(double offsetZ) {
+        this.offsetZ = offsetZ;
     }
 
     /**

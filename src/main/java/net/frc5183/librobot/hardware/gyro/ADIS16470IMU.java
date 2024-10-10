@@ -32,7 +32,7 @@ public class ADIS16470IMU extends IMU {
     private final CartesianAxis roll;
 
     /**
-     * Creates a new {@link ADIS16470IMU} using the RIO's Onboard MXP port and 4s calibration time, and yaw pitch roll as ZXY respectively.
+     * Creates a new {@link ADIS16470IMU} using the RIO's Onboard SPI port and 4s calibration time, and yaw pitch roll as ZXY respectively.
      * @see ADIS16470_IMU#ADIS16470_IMU()
      */
     public ADIS16470IMU() {
@@ -112,12 +112,12 @@ public class ADIS16470IMU extends IMU {
 
     @Override
     public double getRawAngleRadians(@NotNull Attitude axis) {
-        return imu.getAngle(fromAttitude(axis));
+        return Math.toRadians(imu.getAngle(fromAttitude(axis)));
     }
 
     @Override
     public double getRawAngleRadians(@NotNull CartesianAxis axis) {
-        return imu.getAngle(fromCartesian(axis));
+        return Math.toRadians(imu.getAngle(fromCartesian(axis)));
     }
 
     @Override
