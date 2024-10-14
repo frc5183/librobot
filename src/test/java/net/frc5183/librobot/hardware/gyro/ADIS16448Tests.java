@@ -376,6 +376,116 @@ class ADIS16448Tests {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Angle Rate Tests">
+    @Test
+    void testRateCartesianX() {
+        sim.setGyroRateX(TEST_ANGLE_1/2);
+        assertEquals(TEST_ANGLE_1/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.X), DELTA);
+
+        sim.setGyroRateX(TEST_ANGLE_2/2);
+        assertEquals(TEST_ANGLE_2/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.X), DELTA);
+
+        sim.setGyroRateX(TEST_ANGLE_3/2);
+        assertEquals(TEST_ANGLE_3/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.X), DELTA);
+
+        sim.setGyroRateX(TEST_ANGLE_4/2);
+        assertEquals(TEST_ANGLE_4/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.X), DELTA);
+
+        sim.setGyroRateX(TEST_ANGLE_5/2);
+        assertEquals(TEST_ANGLE_5/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.X), DELTA);
+    }
+
+    @Test
+    void testRateCartesianY() {
+        sim.setGyroRateY(TEST_ANGLE_1/2);
+        assertEquals(TEST_ANGLE_1/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.Y), DELTA);
+
+        sim.setGyroRateY(TEST_ANGLE_2/2);
+        assertEquals(TEST_ANGLE_2/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.Y), DELTA);
+
+        sim.setGyroRateY(TEST_ANGLE_3/2);
+        assertEquals(TEST_ANGLE_3/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.Y), DELTA);
+
+        sim.setGyroRateY(TEST_ANGLE_4/2);
+        assertEquals(TEST_ANGLE_4/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.Y), DELTA);
+
+        sim.setGyroRateY(TEST_ANGLE_5/2);
+        assertEquals(TEST_ANGLE_5/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.Y), DELTA);
+    }
+
+    @Test
+    void testRateCartesianZ() {
+        sim.setGyroRateZ(TEST_ANGLE_1/2);
+        assertEquals(TEST_ANGLE_1/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.Z), DELTA);
+
+        sim.setGyroRateZ(TEST_ANGLE_2/2);
+        assertEquals(TEST_ANGLE_2/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.Z), DELTA);
+
+        sim.setGyroRateZ(TEST_ANGLE_3/2);
+        assertEquals(TEST_ANGLE_3/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.Z), DELTA);
+
+        sim.setGyroRateZ(TEST_ANGLE_4/2);
+        assertEquals(TEST_ANGLE_4/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.Z), DELTA);
+
+        sim.setGyroRateZ(TEST_ANGLE_5/2);
+        assertEquals(TEST_ANGLE_5/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.Z), DELTA);
+    }
+
+    @Test
+    void testRateYaw() {
+        sim.setGyroRateZ(TEST_ANGLE_1/2);
+        assertEquals(TEST_ANGLE_1/2, imu.getRateDegreesPerSecond(IMU.Attitude.YAW), DELTA);
+
+        sim.setGyroRateZ(TEST_ANGLE_2/2);
+        assertEquals(TEST_ANGLE_2/2, imu.getRateDegreesPerSecond(IMU.Attitude.YAW), DELTA);
+
+        sim.setGyroRateZ(TEST_ANGLE_3/2);
+        assertEquals(TEST_ANGLE_3/2, imu.getRateDegreesPerSecond(IMU.Attitude.YAW), DELTA);
+
+        sim.setGyroRateZ(TEST_ANGLE_4/2);
+        assertEquals(TEST_ANGLE_4/2, imu.getRateDegreesPerSecond(IMU.Attitude.YAW), DELTA);
+
+        sim.setGyroRateZ(TEST_ANGLE_5/2);
+        assertEquals(TEST_ANGLE_5/2, imu.getRateDegreesPerSecond(IMU.Attitude.YAW), DELTA);
+    }
+
+    @Test
+    void testRatePitch() {
+        sim.setGyroRateX(TEST_ANGLE_1/2);
+        assertEquals(TEST_ANGLE_1/2, imu.getRateDegreesPerSecond(IMU.Attitude.PITCH), DELTA);
+
+        sim.setGyroRateX(TEST_ANGLE_2/2);
+        assertEquals(TEST_ANGLE_2/2, imu.getRateDegreesPerSecond(IMU.Attitude.PITCH), DELTA);
+
+        sim.setGyroRateX(TEST_ANGLE_3/2);
+        assertEquals(TEST_ANGLE_3/2, imu.getRateDegreesPerSecond(IMU.Attitude.PITCH), DELTA);
+
+        sim.setGyroRateX(TEST_ANGLE_4/2);
+        assertEquals(TEST_ANGLE_4/2, imu.getRateDegreesPerSecond(IMU.Attitude.PITCH), DELTA);
+
+        sim.setGyroRateX(TEST_ANGLE_5/2);
+        assertEquals(TEST_ANGLE_5/2, imu.getRateDegreesPerSecond(IMU.Attitude.PITCH), DELTA);
+    }
+
+    @Test
+    void testRateRoll() {
+        sim.setGyroRateY(TEST_ANGLE_1 / 2);
+        assertEquals(TEST_ANGLE_1 / 2, imu.getRateDegreesPerSecond(IMU.Attitude.ROLL), DELTA);
+
+        sim.setGyroRateY(TEST_ANGLE_2 / 2);
+        assertEquals(TEST_ANGLE_2 / 2, imu.getRateDegreesPerSecond(IMU.Attitude.ROLL), DELTA);
+
+        sim.setGyroRateY(TEST_ANGLE_3 / 2);
+        assertEquals(TEST_ANGLE_3 / 2, imu.getRateDegreesPerSecond(IMU.Attitude.ROLL), DELTA);
+
+        sim.setGyroRateY(TEST_ANGLE_4 / 2);
+        assertEquals(TEST_ANGLE_4 / 2, imu.getRateDegreesPerSecond(IMU.Attitude.ROLL), DELTA);
+
+        sim.setGyroRateY(TEST_ANGLE_5 / 2);
+        assertEquals(TEST_ANGLE_5 / 2, imu.getRateDegreesPerSecond(IMU.Attitude.ROLL), DELTA);
+    }
+    //</editor-fold>
+
     //<editor-fold desc="Acceleration Tests">
     static final double TEST_ACCEL_1 = 0;
     static final double TEST_ACCEL_2 = 1;
@@ -523,6 +633,7 @@ class ADIS16448Tests {
         assertEquals(ADIS16448_IMU.IMUAxis.kY, ADIS16448IMU.fromCartesian(IMU.CartesianAxis.Y));
         assertEquals(ADIS16448_IMU.IMUAxis.kZ, ADIS16448IMU.fromCartesian(IMU.CartesianAxis.Z));
     }
+    //</editor-fold>
 }
 
 

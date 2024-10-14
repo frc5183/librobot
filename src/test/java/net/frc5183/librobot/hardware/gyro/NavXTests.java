@@ -1,90 +1,41 @@
 package net.frc5183.librobot.hardware.gyro;
 
+import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.hal.SimDouble;
+import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.wpilibj.ADIS16470_IMU;
-import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.simulation.ADIS16470_IMUSim;
-import org.junit.jupiter.api.*;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
-class ADIS16470Tests {
-    static final double DELTA = 1E-12;
+class NavXTests {
+    static final double DELTA = 1E-4;
 
-    ADIS16470IMU imu;
-    ADIS16470_IMU wpiIMU;
-    ADIS16470_IMUSim sim;
+    static boolean canResetSimData = false;
+
+    NavXIMU imu;
+    AHRS wpiIMU;
+    NavXSim sim;
 
     @BeforeEach
     void setup(TestInfo info) {
         if (info.getTags().contains("noBefore")) return;
 
-        wpiIMU = new ADIS16470_IMU();
-        sim = new ADIS16470_IMUSim(wpiIMU);
-        imu = new ADIS16470IMU(wpiIMU);
+        if (canResetSimData)
+            SimDeviceSim.resetData();
+        else canResetSimData = true;
+
+        wpiIMU = new AHRS();
+        sim = new NavXSim();
+        imu = new NavXIMU(wpiIMU);
     }
-
-    @AfterEach
-    void shutdown() {
-        wpiIMU.close();
-    }
-
-    //<editor-fold desc="Constructor Tests">
-    @Test()
-    @Tag("noBefore")
-    void testConstructor_givenNothing() {
-        imu = new ADIS16470IMU();
-        wpiIMU = imu.getIMU();
-        sim = new ADIS16470_IMUSim(wpiIMU);
-
-        assertEquals(IMU.CartesianAxis.Z, imu.getYawAxis(), "Default yaw axis is not Z.");
-        assertEquals(IMU.CartesianAxis.X, imu.getPitchAxis(), "Default pitch axis is not X.");
-        assertEquals(IMU.CartesianAxis.Y, imu.getRollAxis(), "Default roll axis is not Y.");
-    }
-
-    @Test
-    @Tag("noBefore")
-    void testConstructor_givenYawPitchRoll() {
-        imu = new ADIS16470IMU(IMU.CartesianAxis.X, IMU.CartesianAxis.Z, IMU.CartesianAxis.Y);
-        wpiIMU = imu.getIMU();
-        sim = new ADIS16470_IMUSim(wpiIMU);
-
-        assertEquals(SPI.Port.kMXP.value, wpiIMU.getPort(), "Default port is not MXP.");
-        assertEquals(IMU.CartesianAxis.X, imu.getYawAxis(), "Given yaw axis is not the same.");
-        assertEquals(IMU.CartesianAxis.Z, imu.getPitchAxis(), "Given pitch axis is not the same.");
-        assertEquals(IMU.CartesianAxis.Y, imu.getRollAxis(), "Given roll axis is not the same.");
-    }
-
-    @Test
-    @Tag("noBefore")
-    void testConstructor_givenYawPitchRollPort() {
-        imu = new ADIS16470IMU(IMU.CartesianAxis.X, IMU.CartesianAxis.Z, IMU.CartesianAxis.Y, SPI.Port.kOnboardCS0);
-        wpiIMU = imu.getIMU();
-        sim = new ADIS16470_IMUSim(wpiIMU);
-
-        assertEquals(SPI.Port.kOnboardCS0.value, wpiIMU.getPort(), "Given port is not the same.");
-        assertEquals(IMU.CartesianAxis.X, imu.getYawAxis(), "Given yaw axis is not the same.");
-        assertEquals(IMU.CartesianAxis.Z, imu.getPitchAxis(), "Given pitch axis is not the same.");
-        assertEquals(IMU.CartesianAxis.Y, imu.getRollAxis(), "Given roll axis is not the same.");
-    }
-
-    @Test
-    @Tag("noBefore")
-    void testConstructor_givenYawPortCalibrationTime() {
-        imu = new ADIS16470IMU(IMU.CartesianAxis.X, IMU.CartesianAxis.Z, IMU.CartesianAxis.Y, SPI.Port.kOnboardCS0, ADIS16470_IMU.CalibrationTime._2s);
-        wpiIMU = imu.getIMU();
-        sim = new ADIS16470_IMUSim(wpiIMU);
-
-        assertEquals(SPI.Port.kOnboardCS0.value, wpiIMU.getPort(), "Given port is not the same.");
-        assertEquals(IMU.CartesianAxis.X, imu.getYawAxis(), "Given yaw axis is not the same.");
-        assertEquals(IMU.CartesianAxis.Z, imu.getPitchAxis(), "Given pitch axis is not the same.");
-        assertEquals(IMU.CartesianAxis.Y, imu.getRollAxis(), "Given roll axis is not the same.");
-    }
-    //</editor-fold>
 
     //<editor-fold desc="Angle Tests">
     static final double TEST_ANGLE_1 = 0;
@@ -95,109 +46,111 @@ class ADIS16470Tests {
 
     @Test
     void testAngleYaw() {
-        sim.setGyroAngleZ(TEST_ANGLE_1);
+        sim.setYaw(TEST_ANGLE_1);
         assertEquals(TEST_ANGLE_1, Math.toDegrees(imu.getAngleRadians(IMU.Attitude.YAW)), DELTA);
 
-        sim.setGyroAngleZ(TEST_ANGLE_2);
+        sim.setYaw(TEST_ANGLE_2);
         assertEquals(TEST_ANGLE_2, Math.toDegrees(imu.getAngleRadians(IMU.Attitude.YAW)), DELTA);
 
-        sim.setGyroAngleZ(TEST_ANGLE_3);
+        sim.setYaw(TEST_ANGLE_3);
         assertEquals(TEST_ANGLE_3, Math.toDegrees(imu.getAngleRadians(IMU.Attitude.YAW)), DELTA);
 
-        sim.setGyroAngleZ(TEST_ANGLE_4);
+        sim.setYaw(TEST_ANGLE_4);
         assertEquals(TEST_ANGLE_4, Math.toDegrees(imu.getAngleRadians(IMU.Attitude.YAW)), DELTA);
 
-        sim.setGyroAngleZ(TEST_ANGLE_5);
+        sim.setYaw(TEST_ANGLE_5);
         assertEquals(TEST_ANGLE_5, Math.toDegrees(imu.getAngleRadians(IMU.Attitude.YAW)), DELTA);
     }
 
     @Test
     void testAnglePitch() {
-        sim.setGyroAngleX(TEST_ANGLE_1);
+        sim.setPitch(TEST_ANGLE_1);
         assertEquals(TEST_ANGLE_1, Math.toDegrees(imu.getAngleRadians(IMU.Attitude.PITCH)), DELTA);
 
-        sim.setGyroAngleX(TEST_ANGLE_2);
+        sim.setPitch(TEST_ANGLE_2);
         assertEquals(TEST_ANGLE_2, Math.toDegrees(imu.getAngleRadians(IMU.Attitude.PITCH)), DELTA);
 
-        sim.setGyroAngleX(TEST_ANGLE_3);
+        sim.setPitch(TEST_ANGLE_3);
         assertEquals(TEST_ANGLE_3, Math.toDegrees(imu.getAngleRadians(IMU.Attitude.PITCH)), DELTA);
 
-        sim.setGyroAngleX(TEST_ANGLE_4);
+        sim.setPitch(TEST_ANGLE_4);
         assertEquals(TEST_ANGLE_4, Math.toDegrees(imu.getAngleRadians(IMU.Attitude.PITCH)), DELTA);
 
-        sim.setGyroAngleX(TEST_ANGLE_5);
+        sim.setPitch(TEST_ANGLE_5);
         assertEquals(TEST_ANGLE_5, Math.toDegrees(imu.getAngleRadians(IMU.Attitude.PITCH)), DELTA);
     }
 
     @Test
     void testAngleRoll() {
-        sim.setGyroAngleY(TEST_ANGLE_1);
+        sim.setRoll(TEST_ANGLE_1);
         assertEquals(TEST_ANGLE_1, Math.toDegrees(imu.getAngleRadians(IMU.Attitude.ROLL)), DELTA);
 
-        sim.setGyroAngleY(TEST_ANGLE_2);
+        sim.setRoll(TEST_ANGLE_2);
         assertEquals(TEST_ANGLE_2, Math.toDegrees(imu.getAngleRadians(IMU.Attitude.ROLL)), DELTA);
 
-        sim.setGyroAngleY(TEST_ANGLE_3);
+        sim.setRoll(TEST_ANGLE_3);
         assertEquals(TEST_ANGLE_3, Math.toDegrees(imu.getAngleRadians(IMU.Attitude.ROLL)), DELTA);
 
-        sim.setGyroAngleY(TEST_ANGLE_4);
+        sim.setRoll(TEST_ANGLE_4);
         assertEquals(TEST_ANGLE_4, Math.toDegrees(imu.getAngleRadians(IMU.Attitude.ROLL)), DELTA);
 
-        sim.setGyroAngleY(TEST_ANGLE_5);
+        sim.setRoll(TEST_ANGLE_5);
         assertEquals(TEST_ANGLE_5, Math.toDegrees(imu.getAngleRadians(IMU.Attitude.ROLL)), DELTA);
     }
 
+
+    // Default Omnimount for NavX is X = PITCH, Y = ROLL, Z = YAW.
     @Test
     void testAngleCartesianX() {
-        sim.setGyroAngleX(TEST_ANGLE_1);
+        sim.setPitch(TEST_ANGLE_1);
         assertEquals(TEST_ANGLE_1, Math.toDegrees(imu.getAngleRadians(IMU.CartesianAxis.X)), DELTA);
 
-        sim.setGyroAngleX(TEST_ANGLE_2);
+        sim.setPitch(TEST_ANGLE_2);
         assertEquals(TEST_ANGLE_2, Math.toDegrees(imu.getAngleRadians(IMU.CartesianAxis.X)), DELTA);
 
-        sim.setGyroAngleX(TEST_ANGLE_3);
+        sim.setPitch(TEST_ANGLE_3);
         assertEquals(TEST_ANGLE_3, Math.toDegrees(imu.getAngleRadians(IMU.CartesianAxis.X)), DELTA);
 
-        sim.setGyroAngleX(TEST_ANGLE_4);
+        sim.setPitch(TEST_ANGLE_4);
         assertEquals(TEST_ANGLE_4, Math.toDegrees(imu.getAngleRadians(IMU.CartesianAxis.X)), DELTA);
 
-        sim.setGyroAngleX(TEST_ANGLE_5);
+        sim.setPitch(TEST_ANGLE_5);
         assertEquals(TEST_ANGLE_5, Math.toDegrees(imu.getAngleRadians(IMU.CartesianAxis.X)), DELTA);
     }
 
     @Test
     void testAngleCartesianY() {
-        sim.setGyroAngleY(TEST_ANGLE_1);
+        sim.setRoll(TEST_ANGLE_1);
         assertEquals(TEST_ANGLE_1, Math.toDegrees(imu.getAngleRadians(IMU.CartesianAxis.Y)), DELTA);
 
-        sim.setGyroAngleY(TEST_ANGLE_2);
+        sim.setRoll(TEST_ANGLE_2);
         assertEquals(TEST_ANGLE_2, Math.toDegrees(imu.getAngleRadians(IMU.CartesianAxis.Y)), DELTA);
 
-        sim.setGyroAngleY(TEST_ANGLE_3);
+        sim.setRoll(TEST_ANGLE_3);
         assertEquals(TEST_ANGLE_3, Math.toDegrees(imu.getAngleRadians(IMU.CartesianAxis.Y)), DELTA);
 
-        sim.setGyroAngleY(TEST_ANGLE_4);
+        sim.setRoll(TEST_ANGLE_4);
         assertEquals(TEST_ANGLE_4, Math.toDegrees(imu.getAngleRadians(IMU.CartesianAxis.Y)), DELTA);
 
-        sim.setGyroAngleY(TEST_ANGLE_5);
+        sim.setRoll(TEST_ANGLE_5);
         assertEquals(TEST_ANGLE_5, Math.toDegrees(imu.getAngleRadians(IMU.CartesianAxis.Y)), DELTA);
     }
 
     @Test
     void testAngleCartesianZ() {
-        sim.setGyroAngleZ(TEST_ANGLE_1);
+        sim.setYaw(TEST_ANGLE_1);
         assertEquals(TEST_ANGLE_1, Math.toDegrees(imu.getAngleRadians(IMU.CartesianAxis.Z)), DELTA);
 
-        sim.setGyroAngleZ(TEST_ANGLE_2);
+        sim.setYaw(TEST_ANGLE_2);
         assertEquals(TEST_ANGLE_2, Math.toDegrees(imu.getAngleRadians(IMU.CartesianAxis.Z)), DELTA);
 
-        sim.setGyroAngleZ(TEST_ANGLE_3);
+        sim.setYaw(TEST_ANGLE_3);
         assertEquals(TEST_ANGLE_3, Math.toDegrees(imu.getAngleRadians(IMU.CartesianAxis.Z)), DELTA);
 
-        sim.setGyroAngleZ(TEST_ANGLE_4);
+        sim.setYaw(TEST_ANGLE_4);
         assertEquals(TEST_ANGLE_4, Math.toDegrees(imu.getAngleRadians(IMU.CartesianAxis.Z)), DELTA);
 
-        sim.setGyroAngleZ(TEST_ANGLE_5);
+        sim.setYaw(TEST_ANGLE_5);
         assertEquals(TEST_ANGLE_5, Math.toDegrees(imu.getAngleRadians(IMU.CartesianAxis.Z)), DELTA);
     }
 
@@ -205,9 +158,9 @@ class ADIS16470Tests {
     void testAngleRotation3d() {
         // Degrees
         Consumer<Double> setAngle = (Double angle) -> {
-            sim.setGyroAngleX(angle);
-            sim.setGyroAngleY(angle);
-            sim.setGyroAngleZ(angle);
+            sim.setYaw(angle);
+            sim.setPitch(angle);
+            sim.setRoll(angle);
         };
 
         // Radians
@@ -250,9 +203,9 @@ class ADIS16470Tests {
 
         // Degrees.
         Consumer<Double> setAngle = (Double angle) -> {
-            sim.setGyroAngleX(angle);
-            sim.setGyroAngleY(angle);
-            sim.setGyroAngleZ(angle);
+            sim.setYaw(angle);
+            sim.setPitch(angle);
+            sim.setRoll(angle);
         };
 
         // Radians.
@@ -380,122 +333,81 @@ class ADIS16470Tests {
         testAngles.accept(Math.toRadians(TEST_ANGLE_5), Math.toRadians(TEST_ANGLE_5));
         //</editor-fold>
     }
+
     //</editor-fold>
 
     //<editor-fold desc="Angle Rate Tests">
     @Test
     void testRateCartesianX() {
-        sim.setGyroRateX(TEST_ANGLE_1/2);
-        assertEquals(TEST_ANGLE_1/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.X), DELTA);
-
-        sim.setGyroRateX(TEST_ANGLE_2/2);
-        assertEquals(TEST_ANGLE_2/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.X), DELTA);
-
-        sim.setGyroRateX(TEST_ANGLE_3/2);
-        assertEquals(TEST_ANGLE_3/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.X), DELTA);
-
-        sim.setGyroRateX(TEST_ANGLE_4/2);
-        assertEquals(TEST_ANGLE_4/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.X), DELTA);
-
-        sim.setGyroRateX(TEST_ANGLE_5/2);
-        assertEquals(TEST_ANGLE_5/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.X), DELTA);
+        assertThrowsExactly(
+                UnsupportedOperationException.class,
+                () -> imu.getRateDegreesPerSecond(IMU.CartesianAxis.X)
+        );
     }
 
     @Test
     void testRateCartesianY() {
-        sim.setGyroRateY(TEST_ANGLE_1/2);
-        assertEquals(TEST_ANGLE_1/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.Y), DELTA);
-
-        sim.setGyroRateY(TEST_ANGLE_2/2);
-        assertEquals(TEST_ANGLE_2/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.Y), DELTA);
-
-        sim.setGyroRateY(TEST_ANGLE_3/2);
-        assertEquals(TEST_ANGLE_3/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.Y), DELTA);
-
-        sim.setGyroRateY(TEST_ANGLE_4/2);
-        assertEquals(TEST_ANGLE_4/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.Y), DELTA);
-
-        sim.setGyroRateY(TEST_ANGLE_5/2);
-        assertEquals(TEST_ANGLE_5/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.Y), DELTA);
+        assertThrowsExactly(
+                UnsupportedOperationException.class,
+                () -> imu.getRateDegreesPerSecond(IMU.CartesianAxis.Y)
+        );
     }
 
+    // Only test YAW (aka Z with default omnimount) because the other axes are unsupported.
     @Test
     void testRateCartesianZ() {
-        sim.setGyroRateZ(TEST_ANGLE_1/2);
+        sim.setRate(TEST_ANGLE_1/2);
         assertEquals(TEST_ANGLE_1/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.Z), DELTA);
 
-        sim.setGyroRateZ(TEST_ANGLE_2/2);
+        sim.setRate(TEST_ANGLE_2/2);
         assertEquals(TEST_ANGLE_2/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.Z), DELTA);
 
-        sim.setGyroRateZ(TEST_ANGLE_3/2);
+        sim.setRate(TEST_ANGLE_3/2);
         assertEquals(TEST_ANGLE_3/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.Z), DELTA);
 
-        sim.setGyroRateZ(TEST_ANGLE_4/2);
+        sim.setRate(TEST_ANGLE_4/2);
         assertEquals(TEST_ANGLE_4/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.Z), DELTA);
 
-        sim.setGyroRateZ(TEST_ANGLE_5/2);
+        sim.setRate(TEST_ANGLE_5/2);
         assertEquals(TEST_ANGLE_5/2, imu.getRateDegreesPerSecond(IMU.CartesianAxis.Z), DELTA);
     }
 
     @Test
     void testRateYaw() {
-        sim.setGyroRateZ(TEST_ANGLE_1/2);
+        sim.setRate(TEST_ANGLE_1/2);
         assertEquals(TEST_ANGLE_1/2, imu.getRateDegreesPerSecond(IMU.Attitude.YAW), DELTA);
 
-        sim.setGyroRateZ(TEST_ANGLE_2/2);
+        sim.setRate(TEST_ANGLE_2/2);
         assertEquals(TEST_ANGLE_2/2, imu.getRateDegreesPerSecond(IMU.Attitude.YAW), DELTA);
 
-        sim.setGyroRateZ(TEST_ANGLE_3/2);
+        sim.setRate(TEST_ANGLE_3/2);
         assertEquals(TEST_ANGLE_3/2, imu.getRateDegreesPerSecond(IMU.Attitude.YAW), DELTA);
 
-        sim.setGyroRateZ(TEST_ANGLE_4/2);
+        sim.setRate(TEST_ANGLE_4/2);
         assertEquals(TEST_ANGLE_4/2, imu.getRateDegreesPerSecond(IMU.Attitude.YAW), DELTA);
 
-        sim.setGyroRateZ(TEST_ANGLE_5/2);
+        sim.setRate(TEST_ANGLE_5/2);
         assertEquals(TEST_ANGLE_5/2, imu.getRateDegreesPerSecond(IMU.Attitude.YAW), DELTA);
     }
 
     @Test
     void testRatePitch() {
-        sim.setGyroRateX(TEST_ANGLE_1/2);
-        assertEquals(TEST_ANGLE_1/2, imu.getRateDegreesPerSecond(IMU.Attitude.PITCH), DELTA);
-
-        sim.setGyroRateX(TEST_ANGLE_2/2);
-        assertEquals(TEST_ANGLE_2/2, imu.getRateDegreesPerSecond(IMU.Attitude.PITCH), DELTA);
-
-        sim.setGyroRateX(TEST_ANGLE_3/2);
-        assertEquals(TEST_ANGLE_3/2, imu.getRateDegreesPerSecond(IMU.Attitude.PITCH), DELTA);
-
-        sim.setGyroRateX(TEST_ANGLE_4/2);
-        assertEquals(TEST_ANGLE_4/2, imu.getRateDegreesPerSecond(IMU.Attitude.PITCH), DELTA);
-
-        sim.setGyroRateX(TEST_ANGLE_5/2);
-        assertEquals(TEST_ANGLE_5/2, imu.getRateDegreesPerSecond(IMU.Attitude.PITCH), DELTA);
+        assertThrowsExactly(
+                UnsupportedOperationException.class,
+                () -> imu.getRateDegreesPerSecond(IMU.Attitude.PITCH)
+        );
     }
 
     @Test
     void testRateRoll() {
-        sim.setGyroRateY(TEST_ANGLE_1 / 2);
-        assertEquals(TEST_ANGLE_1 / 2, imu.getRateDegreesPerSecond(IMU.Attitude.ROLL), DELTA);
-
-        sim.setGyroRateY(TEST_ANGLE_2 / 2);
-        assertEquals(TEST_ANGLE_2 / 2, imu.getRateDegreesPerSecond(IMU.Attitude.ROLL), DELTA);
-
-        sim.setGyroRateY(TEST_ANGLE_3 / 2);
-        assertEquals(TEST_ANGLE_3 / 2, imu.getRateDegreesPerSecond(IMU.Attitude.ROLL), DELTA);
-
-        sim.setGyroRateY(TEST_ANGLE_4 / 2);
-        assertEquals(TEST_ANGLE_4 / 2, imu.getRateDegreesPerSecond(IMU.Attitude.ROLL), DELTA);
-
-        sim.setGyroRateY(TEST_ANGLE_5 / 2);
-        assertEquals(TEST_ANGLE_5 / 2, imu.getRateDegreesPerSecond(IMU.Attitude.ROLL), DELTA);
+        assertThrowsExactly(
+                UnsupportedOperationException.class,
+                () -> imu.getRateDegreesPerSecond(IMU.Attitude.ROLL)
+        );
     }
     //</editor-fold>
 
-    // TODO: Acceleration tests are currently disabled due to a bug in wpilibj.
-    // https://github.com/wpilibsuite/allwpilib/issues/7180
     //<editor-fold desc="Acceleration Tests">
-    /*
     static final double TEST_ACCEL_1 = 0;
     static final double TEST_ACCEL_2 = 1;
     static final double TEST_ACCEL_3 = 2;
@@ -505,55 +417,55 @@ class ADIS16470Tests {
     @Test
     void testAccelerationCartesianX() {
         sim.setAccelX(TEST_ACCEL_1);
-        assertEquals(TEST_ACCEL_1, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.X));
+        assertEquals(TEST_ACCEL_1, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.X), DELTA);
 
         sim.setAccelX(TEST_ACCEL_2);
-        assertEquals(TEST_ACCEL_2, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.X));
+        assertEquals(TEST_ACCEL_2, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.X), DELTA);
 
         sim.setAccelX(TEST_ACCEL_3);
-        assertEquals(TEST_ACCEL_3, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.X));
+        assertEquals(TEST_ACCEL_3, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.X), DELTA);
 
         sim.setAccelX(TEST_ACCEL_4);
-        assertEquals(TEST_ACCEL_4, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.X));
+        assertEquals(TEST_ACCEL_4, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.X), DELTA);
 
         sim.setAccelX(TEST_ACCEL_5);
-        assertEquals(TEST_ACCEL_5, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.X));
+        assertEquals(TEST_ACCEL_5, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.X), DELTA);
     }
 
     @Test
     void testAccelerationCartesianY() {
         sim.setAccelY(TEST_ACCEL_1);
-        assertEquals(TEST_ACCEL_1, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Y));
+        assertEquals(TEST_ACCEL_1, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Y), DELTA);
 
         sim.setAccelY(TEST_ACCEL_2);
-        assertEquals(TEST_ACCEL_2, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Y));
+        assertEquals(TEST_ACCEL_2, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Y), DELTA);
 
         sim.setAccelY(TEST_ACCEL_3);
-        assertEquals(TEST_ACCEL_3, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Y));
+        assertEquals(TEST_ACCEL_3, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Y), DELTA);
 
         sim.setAccelY(TEST_ACCEL_4);
-        assertEquals(TEST_ACCEL_4, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Y));
+        assertEquals(TEST_ACCEL_4, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Y), DELTA);
 
         sim.setAccelY(TEST_ACCEL_5);
-        assertEquals(TEST_ACCEL_5, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Y));
+        assertEquals(TEST_ACCEL_5, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Y), DELTA);
     }
 
     @Test
     void testAccelerationCartesianZ() {
         sim.setAccelZ(TEST_ACCEL_1);
-        assertEquals(TEST_ACCEL_1, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Z));
+        assertEquals(TEST_ACCEL_1, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Z), DELTA);
 
         sim.setAccelZ(TEST_ACCEL_2);
-        assertEquals(TEST_ACCEL_2, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Z));
+        assertEquals(TEST_ACCEL_2, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Z), DELTA);
 
         sim.setAccelZ(TEST_ACCEL_3);
-        assertEquals(TEST_ACCEL_3, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Z));
+        assertEquals(TEST_ACCEL_3, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Z), DELTA);
 
         sim.setAccelZ(TEST_ACCEL_4);
-        assertEquals(TEST_ACCEL_4, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Z));
+        assertEquals(TEST_ACCEL_4, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Z), DELTA);
 
         sim.setAccelZ(TEST_ACCEL_5);
-        assertEquals(TEST_ACCEL_5, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Z));
+        assertEquals(TEST_ACCEL_5, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Z), DELTA);
     }
 
     @Test
@@ -567,10 +479,27 @@ class ADIS16470Tests {
 
         // Meters per second squared.
         BiConsumer<Double, Double> testAccel = (Double accel, Double expected) -> {
+            Translation3d translation = imu.getAccelerationMetersPerSecondSquared();
+
             assertEquals(
-                    new Translation3d(expected, expected, expected),
-                    imu.getAccelerationMetersPerSecondSquared(),
-                    "Translation3d failed."
+                    accel,
+                    translation.getX(),
+                    DELTA,
+                    "X failed."
+            );
+
+            assertEquals(
+                    accel,
+                    translation.getY(),
+                    DELTA,
+                    "Y failed."
+            );
+
+            assertEquals(
+                    accel,
+                    translation.getZ(),
+                    DELTA,
+                    "Z failed."
             );
         };
 
@@ -589,17 +518,13 @@ class ADIS16470Tests {
         setAccel.accept(TEST_ACCEL_5);
         testAccel.accept(TEST_ACCEL_5, TEST_ACCEL_5);
     }
-    */
     //</editor-fold>
 
     //<editor-fold desc="Misc Tests">
     @Test
     void testReset() {
-        sim.setGyroAngleX(33);
+        sim.setYaw(33);
         assertDoesNotThrow(() -> imu.reset());
-        assertEquals(0, wpiIMU.getAccelX(), "X reset failed.");
-        assertEquals(0, wpiIMU.getAccelY(), "Y reset failed.");
-        assertEquals(0, wpiIMU.getAccelZ(), "Z reset failed.");
     }
 
     @Test
@@ -609,16 +534,105 @@ class ADIS16470Tests {
 
     @Test
     void testToCartesian() {
-        assertEquals(IMU.CartesianAxis.X, ADIS16470IMU.toCartesian(ADIS16470_IMU.IMUAxis.kX));
-        assertEquals(IMU.CartesianAxis.Y, ADIS16470IMU.toCartesian(ADIS16470_IMU.IMUAxis.kY));
-        assertEquals(IMU.CartesianAxis.Z, ADIS16470IMU.toCartesian(ADIS16470_IMU.IMUAxis.kZ));
+        assertEquals(IMU.CartesianAxis.X, NavXIMU.toCartesian(AHRS.BoardAxis.kBoardAxisX));
+        assertEquals(IMU.CartesianAxis.Y, NavXIMU.toCartesian(AHRS.BoardAxis.kBoardAxisY));
+        assertEquals(IMU.CartesianAxis.Z, NavXIMU.toCartesian(AHRS.BoardAxis.kBoardAxisZ));
     }
 
     @Test
     void testFromCartesian() {
-        assertEquals(ADIS16470_IMU.IMUAxis.kX, ADIS16470IMU.fromCartesian(IMU.CartesianAxis.X));
-        assertEquals(ADIS16470_IMU.IMUAxis.kY, ADIS16470IMU.fromCartesian(IMU.CartesianAxis.Y));
-        assertEquals(ADIS16470_IMU.IMUAxis.kZ, ADIS16470IMU.fromCartesian(IMU.CartesianAxis.Z));
+        assertEquals(AHRS.BoardAxis.kBoardAxisX, NavXIMU.fromCartesian(IMU.CartesianAxis.X));
+        assertEquals(AHRS.BoardAxis.kBoardAxisY, NavXIMU.fromCartesian(IMU.CartesianAxis.Y));
+        assertEquals(AHRS.BoardAxis.kBoardAxisZ, NavXIMU.fromCartesian(IMU.CartesianAxis.Z));
+    }
+    //</editor-fold>
+
+    /**
+     * Class to control a simulated NavX gyroscope.
+     */
+    class NavXSim {
+        private static final int waitDuration = 45;
+
+        private final SimDouble yaw;
+        private final SimDouble pitch;
+        private final SimDouble roll;
+
+        private final SimDouble rate;
+
+        private final SimDouble accelX;
+        private final SimDouble accelY;
+        private final SimDouble accelZ;
+
+        public NavXSim() {
+            int deviceHandle = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
+
+            yaw = new SimDouble(SimDeviceDataJNI.getSimValueHandle(deviceHandle, "Yaw"));
+            pitch = new SimDouble(SimDeviceDataJNI.getSimValueHandle(deviceHandle, "Pitch"));
+            roll = new SimDouble(SimDeviceDataJNI.getSimValueHandle(deviceHandle, "Roll"));
+
+            rate = new SimDouble(SimDeviceDataJNI.getSimValueHandle(deviceHandle, "Rate"));
+
+            accelX = new SimDouble(SimDeviceDataJNI.getSimValueHandle(deviceHandle, "LinearWorldAccelX"));
+            accelY = new SimDouble(SimDeviceDataJNI.getSimValueHandle(deviceHandle, "LinearWorldAccelY"));
+            accelZ = new SimDouble(SimDeviceDataJNI.getSimValueHandle(deviceHandle, "LinearWorldAccelZ"));
+        }
+
+        /**
+         * NavX simulation does not update on-demand, so we have to wait until it updates next.
+         * I could grab this value programmatically, but I'm lazy and the current delay seems fine.
+         */
+        private void delay() {
+            try {
+                Thread.sleep(waitDuration);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        public void setYaw(double angle) {
+            yaw.set(angle);
+            delay();
+        }
+
+        public void setPitch(double angle) {
+            pitch.set(angle);
+            delay();
+        }
+
+        public void setRoll(double angle) {
+            roll.set(angle);
+            delay();
+        }
+
+        public void setRate(double rate) {
+            this.rate.set(rate);
+            delay();
+        }
+
+        public void setAccelX(double accel) {
+            accelX.set(accel);
+            delay();
+        }
+
+        public void setAccelY(double accel) {
+            accelY.set(accel);
+            delay();
+        }
+
+        public void setAccelZ(double accel) {
+            accelZ.set(accel);
+            delay();
+        }
+
+        public void reset() {
+            yaw.set(0);
+            pitch.set(0);
+            roll.set(0);
+            accelX.set(0);
+            accelY.set(0);
+            accelZ.set(0);
+            delay();
+        }
     }
 }
 
