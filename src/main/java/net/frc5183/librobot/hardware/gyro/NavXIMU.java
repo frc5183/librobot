@@ -3,6 +3,7 @@ package net.frc5183.librobot.hardware.gyro;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
@@ -146,18 +147,18 @@ public class NavXIMU extends IMU {
     @Override
     public @NotNull Translation3d getAccelerationMetersPerSecondSquared() {
         return new Translation3d(
-                imu.getWorldLinearAccelX(),
-                imu.getWorldLinearAccelY(),
-                imu.getWorldLinearAccelZ()
+                Units.MetersPerSecondPerSecond.convertFrom(imu.getWorldLinearAccelX(), Units.Gs),
+                Units.MetersPerSecondPerSecond.convertFrom(imu.getWorldLinearAccelY(), Units.Gs),
+                Units.MetersPerSecondPerSecond.convertFrom(imu.getWorldLinearAccelZ(), Units.Gs)
         );
     }
 
     @Override
     public double getAccelerationMetersPerSecondSquared(@NotNull CartesianAxis axis) {
         return switch (axis) {
-            case X -> imu.getWorldLinearAccelX();
-            case Y -> imu.getWorldLinearAccelY();
-            case Z -> imu.getWorldLinearAccelZ();
+            case X -> Units.MetersPerSecondPerSecond.convertFrom(imu.getWorldLinearAccelX(), Units.Gs);
+            case Y -> Units.MetersPerSecondPerSecond.convertFrom(imu.getWorldLinearAccelY(), Units.Gs);
+            case Z -> Units.MetersPerSecondPerSecond.convertFrom(imu.getWorldLinearAccelZ(), Units.Gs);
         };
     }
 

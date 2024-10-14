@@ -5,6 +5,7 @@ import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -412,59 +413,59 @@ class NavXTests {
     static final double TEST_ACCEL_2 = 1;
     static final double TEST_ACCEL_3 = 2;
     static final double TEST_ACCEL_4 = 3;
-    static final double TEST_ACCEL_5 = Math.random() * 3;
+    static final double TEST_ACCEL_5 = Math.random() * 6;
 
     @Test
     void testAccelerationCartesianX() {
-        sim.setAccelX(TEST_ACCEL_1);
+        sim.setAccelX(Units.Gs.convertFrom(TEST_ACCEL_1, Units.MetersPerSecondPerSecond));
         assertEquals(TEST_ACCEL_1, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.X), DELTA);
 
-        sim.setAccelX(TEST_ACCEL_2);
+        sim.setAccelX(Units.Gs.convertFrom(TEST_ACCEL_2, Units.MetersPerSecondPerSecond));
         assertEquals(TEST_ACCEL_2, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.X), DELTA);
 
-        sim.setAccelX(TEST_ACCEL_3);
+        sim.setAccelX(Units.Gs.convertFrom(TEST_ACCEL_3, Units.MetersPerSecondPerSecond));
         assertEquals(TEST_ACCEL_3, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.X), DELTA);
 
-        sim.setAccelX(TEST_ACCEL_4);
+        sim.setAccelX(Units.Gs.convertFrom(TEST_ACCEL_4, Units.MetersPerSecondPerSecond));
         assertEquals(TEST_ACCEL_4, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.X), DELTA);
 
-        sim.setAccelX(TEST_ACCEL_5);
+        sim.setAccelX(Units.Gs.convertFrom(TEST_ACCEL_5, Units.MetersPerSecondPerSecond));
         assertEquals(TEST_ACCEL_5, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.X), DELTA);
     }
 
     @Test
     void testAccelerationCartesianY() {
-        sim.setAccelY(TEST_ACCEL_1);
+        sim.setAccelY(Units.Gs.convertFrom(TEST_ACCEL_1, Units.MetersPerSecondPerSecond));
         assertEquals(TEST_ACCEL_1, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Y), DELTA);
 
-        sim.setAccelY(TEST_ACCEL_2);
+        sim.setAccelY(Units.Gs.convertFrom(TEST_ACCEL_2, Units.MetersPerSecondPerSecond));
         assertEquals(TEST_ACCEL_2, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Y), DELTA);
 
-        sim.setAccelY(TEST_ACCEL_3);
+        sim.setAccelY(Units.Gs.convertFrom(TEST_ACCEL_3, Units.MetersPerSecondPerSecond));
         assertEquals(TEST_ACCEL_3, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Y), DELTA);
 
-        sim.setAccelY(TEST_ACCEL_4);
+        sim.setAccelY(Units.Gs.convertFrom(TEST_ACCEL_4, Units.MetersPerSecondPerSecond));
         assertEquals(TEST_ACCEL_4, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Y), DELTA);
 
-        sim.setAccelY(TEST_ACCEL_5);
+        sim.setAccelY(Units.Gs.convertFrom(TEST_ACCEL_5, Units.MetersPerSecondPerSecond));
         assertEquals(TEST_ACCEL_5, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Y), DELTA);
     }
 
     @Test
     void testAccelerationCartesianZ() {
-        sim.setAccelZ(TEST_ACCEL_1);
+        sim.setAccelZ(Units.Gs.convertFrom(TEST_ACCEL_1, Units.MetersPerSecondPerSecond));
         assertEquals(TEST_ACCEL_1, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Z), DELTA);
 
-        sim.setAccelZ(TEST_ACCEL_2);
+        sim.setAccelZ(Units.Gs.convertFrom(TEST_ACCEL_2, Units.MetersPerSecondPerSecond));
         assertEquals(TEST_ACCEL_2, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Z), DELTA);
 
-        sim.setAccelZ(TEST_ACCEL_3);
+        sim.setAccelZ(Units.Gs.convertFrom(TEST_ACCEL_3, Units.MetersPerSecondPerSecond));
         assertEquals(TEST_ACCEL_3, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Z), DELTA);
 
-        sim.setAccelZ(TEST_ACCEL_4);
+        sim.setAccelZ(Units.Gs.convertFrom(TEST_ACCEL_4, Units.MetersPerSecondPerSecond));
         assertEquals(TEST_ACCEL_4, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Z), DELTA);
 
-        sim.setAccelZ(TEST_ACCEL_5);
+        sim.setAccelZ(Units.Gs.convertFrom(TEST_ACCEL_5, Units.MetersPerSecondPerSecond));
         assertEquals(TEST_ACCEL_5, imu.getAccelerationMetersPerSecondSquared(IMU.CartesianAxis.Z), DELTA);
     }
 
@@ -472,9 +473,9 @@ class NavXTests {
     void testAccelerationTranslation3d() {
         // Meters per second squared.
         Consumer<Double> setAccel = (Double accel) -> {
-            sim.setAccelX(accel);
-            sim.setAccelY(accel);
-            sim.setAccelZ(accel);
+            sim.setAccelX(Units.Gs.convertFrom(accel, Units.MetersPerSecondPerSecond));
+            sim.setAccelY(Units.Gs.convertFrom(accel, Units.MetersPerSecondPerSecond));
+            sim.setAccelZ(Units.Gs.convertFrom(accel, Units.MetersPerSecondPerSecond));
         };
 
         // Meters per second squared.
