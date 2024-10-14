@@ -115,6 +115,12 @@ public abstract class IMU extends SwerveIMU {
     }
 
     /**
+     * Returns the rotation rate of the IMU in degrees per second.
+     * @return the rotation rate of the IMU in degrees per second.
+     */
+    public abstract double getRate();
+
+    /**
      * Gets the acceleration from the IMU in meters per second squared.
      * @return {@link Translation3d} of the acceleration from the IMU in meters per second squared.
      */

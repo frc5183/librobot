@@ -130,6 +130,11 @@ public class ADIS16470IMU extends IMU {
     }
 
     @Override
+    public double getRate() {
+        return imu.getRate();
+    }
+
+    @Override
     public @NotNull Translation3d getAccelerationMetersPerSecondSquared() {
         return new Translation3d(imu.getAccelX(), imu.getAccelY(), imu.getAccelZ());
     }
