@@ -130,8 +130,13 @@ public class ADIS16470IMU extends IMU {
     }
 
     @Override
-    public double getRate() {
-        return imu.getRate();
+    public double getRateDegreesPerSecond(Attitude axis) {
+        return imu.getRate(fromAttitude(axis));
+    }
+
+    @Override
+    public double getRateDegreesPerSecond(CartesianAxis axis) {
+        return imu.getRate(fromCartesian(axis));
     }
 
     @Override

@@ -115,10 +115,28 @@ public abstract class IMU extends SwerveIMU {
     }
 
     /**
-     * Returns the rotation rate of the IMU in degrees per second.
-     * @return the rotation rate of the IMU in degrees per second.
+     * Returns the rotation rate of the specified axis in degrees per second.
+     * @param axis the {@link Attitude} to get the rotation rate of.
+     * @return the rotation rate of the specified axis in degrees per second.
      */
-    public abstract double getRate();
+    public abstract double getRateDegreesPerSecond(Attitude axis);
+
+    /**
+     * Returns the rotation rate of the specified axis in degrees per second.
+     * @param axis the {@link CartesianAxis} to get the rotation rate of.
+     * @return the rotation rate of the specified axis in degrees per second.
+     */
+    public abstract double getRateDegreesPerSecond(CartesianAxis axis);
+
+    /**
+     * Returns the rotation rate of the yaw axis in degrees per second.
+     * @return the rotation rate of the yaw axis in degrees per second.
+     * @deprecated this only exists for YAGSL, use {@link #getRateDegreesPerSecond(Attitude)} instead (since that's what this method calls internally).
+     * @see #getRateDegreesPerSecond(Attitude)
+     */
+    public double getRate() {
+        return getRateDegreesPerSecond(Attitude.YAW);
+    }
 
     /**
      * Gets the acceleration from the IMU in meters per second squared.

@@ -89,9 +89,9 @@ public class NavXIMU extends IMU {
     @Override
     public double getRawAngleRadians(@NotNull Attitude axis) {
         return switch (axis) {
-            case YAW -> imu.getYaw();
-            case PITCH -> imu.getPitch();
-            case ROLL -> imu.getRoll();
+            case YAW -> Math.toRadians(convertNavXDegrees(imu.getYaw()));
+            case PITCH -> Math.toRadians(convertNavXDegrees(imu.getPitch()));
+            case ROLL -> Math.toRadians(convertNavXDegrees(imu.getRoll()));
         };
     }
 
@@ -120,8 +120,27 @@ public class NavXIMU extends IMU {
     }
 
     @Override
-    public double getRate() {
-        return imu.getRate();
+    public double getRateDegreesPerSecond(Attitude axis) {
+        return switch (axis) {
+            case YAW -> imu.getRate();
+            case PITCH -> throw new UnsupportedOperationException("NavX does not support getting pitch rate.");
+            case ROLL -> throw new UnsupportedOperationException("NavX does not support getting roll rate.");
+        };
+    }
+
+    @Override
+    public double getRateDegreesPerSecond(CartesianAxis axis) {
+        Attitude attitude;
+
+        if (axis == yaw) {
+            attitude = Attitude.YAW;
+        } else if (axis == pitch) {
+            attitude = Attitude.PITCH;
+        } else {
+            attitude = Attitude.ROLL;
+        }
+
+        return getRateDegreesPerSecond(attitude);
     }
 
     @Override
@@ -183,6 +202,18 @@ public class NavXIMU extends IMU {
         return imu;
     }
 
+    /**
+     * The NavX returns degrees from -180 to 180, however we return degrees from 0 to 360, so we need to convert it.
+     * @param navXDegrees the angle from -180 to 180 degrees
+     * @return the angle from 0 to 360 degrees.
+     */
+    private double convertNavXDegrees(double navXDegrees) {
+        if (navXDegrees < 0) {
+            return navXDegrees + 360;
+        }
+
+        return navXDegrees;
+    }
 
     /**
      * Returns a new {@link CartesianAxis} from an {@link AHRS.BoardYawAxis}.

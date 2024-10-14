@@ -115,8 +115,23 @@ public class ADIS16448IMU extends IMU {
     }
 
     @Override
-    public double getRate() {
-        return imu.getRate();
+    public double getRateDegreesPerSecond(Attitude axis) {
+        CartesianAxis cartesianAxis = switch (axis) {
+            case YAW -> yaw;
+            case PITCH -> pitch;
+            case ROLL -> roll;
+        };
+
+        return getRateDegreesPerSecond(cartesianAxis);
+    }
+
+    @Override
+    public double getRateDegreesPerSecond(CartesianAxis axis) {
+        return switch (axis) {
+            case X -> imu.getGyroRateX();
+            case Y -> imu.getGyroRateY();
+            case Z -> imu.getGyroRateZ();
+        };
     }
 
     @Override
