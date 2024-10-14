@@ -94,6 +94,7 @@ public abstract class IMU extends SwerveIMU {
      * @deprecated this only exists for YAGSL, use {@link #getRotation3dRadians()} instead (since that's what this method calls internally).
      * @see #getRotation3dRadians()
      */
+    @Deprecated
     public Rotation3d getRawRotation3d() {
         return getRawRotation3dRadians();
     }
@@ -110,6 +111,7 @@ public abstract class IMU extends SwerveIMU {
      * @deprecated this only exists for YAGSL, use {@link #getRotation3dRadians()} instead (since that's what this method calls internally).
      * @see #getRotation3dRadians()
      */
+    @Deprecated
     public Rotation3d getRotation3d() {
         return getRotation3dRadians();
     }
@@ -134,6 +136,7 @@ public abstract class IMU extends SwerveIMU {
      * @deprecated this only exists for YAGSL, use {@link #getRateDegreesPerSecond(Attitude)} instead (since that's what this method calls internally).
      * @see #getRateDegreesPerSecond(Attitude)
      */
+    @Deprecated
     public double getRate() {
         return getRateDegreesPerSecond(Attitude.YAW);
     }
@@ -150,6 +153,7 @@ public abstract class IMU extends SwerveIMU {
      * @see #getAccelerationMetersPerSecondSquared()
      * @deprecated this only exists for use by YAGSL, use {@link #getAccelerationMetersPerSecondSquared()} instead (since that's what this method calls internally).
      */
+    @Deprecated
     public Optional<Translation3d> getAccel() {
         return Optional.of(getAccelerationMetersPerSecondSquared());
     }
