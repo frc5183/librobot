@@ -1,4 +1,4 @@
-name: Build Java
+name: Test Java
 
 on:
     push:
@@ -14,7 +14,7 @@ on:
     pull_request:
 
 jobs:
-    build-jar:
+    test-java:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
@@ -29,5 +29,5 @@ jobs:
             - name: Setup Gradle
               uses: gradle/actions/setup-gradle@v3
 
-            - name: Build
-              run: ./gradlew build --scan
+            - name: Test
+              run: ./gradlew test
